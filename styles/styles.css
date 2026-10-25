@@ -22,7 +22,12 @@
 
 
 /* --- GLOBAL RESET & TYPOGRAPHY --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 html { scroll-behavior: smooth; }
 body {
     font-family: var(--font-body);
@@ -169,6 +174,7 @@ nav ul li a:hover, nav ul li a.active { color: var(--brand-gold); }
     cursor: pointer;
 }
 .nav-signout-btn:hover { color: #f2e8c8; }
+.mobile-auth-item { display: none; }
 
 /* --- SECTION UTILITIES --- */
 section { padding: 120px 5%; }
@@ -920,7 +926,7 @@ body.admin-body {
         left: 0; 
         height: calc(100vh - 75px); 
         background-color: var(--bg-main); 
-        padding: 40px 0; 
+        padding: 40px 0 90px !important;
         border-bottom: 1px solid var(--brand-gold);
         z-index: 999;
         overflow-y: auto;
@@ -1030,7 +1036,7 @@ body.admin-body {
         left: 0; 
         height: calc(100vh - 75px); 
         background-color: var(--bg-main); 
-        padding: 40px 0; 
+        padding: 40px 0 90px !important;
         border-bottom: 1px solid var(--brand-gold);
         z-index: 999;
         overflow-y: auto;
@@ -1055,7 +1061,61 @@ body.admin-body {
     nav ul li a {
         font-size: 1.2rem !important;
     }
+    .mobile-auth-item {
+        display: block !important;
+        width: min(100% - 48px, 380px);
+        margin: 8px auto 0 !important;
+        padding: 24px 0 0;
+        border-top: 1px solid #C5A88033;
+        text-align: center;
+    }
+    #navMobileAuth { display: flex; justify-content: center; width: 100%; }
+    .mobile-nav-signin-btn {
+        justify-content: center;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 16px !important;
+        border-color: var(--brand-gold) !important;
+        background: #050505 !important;
+        color: var(--brand-gold) !important;
+        font-size: 0.76rem !important;
+        letter-spacing: 1px;
+    }
+    .mobile-nav-signin-btn:hover { background: rgba(212, 175, 55, 0.08) !important; }
+    .mobile-nav-user-profile {
+        display: grid;
+        grid-template-columns: 36px 1fr auto;
+        width: 100%;
+        gap: 12px;
+        padding: 4px 0;
+        text-align: left;
+    }
+    .mobile-nav-user-profile .nav-user-avatar { width: 36px; height: 36px; grid-row: span 2; }
+    .mobile-nav-user-first-name {
+        display: block !important;
+        align-self: center;
+        font-size: 0.95rem;
+    }
+    .mobile-nav-bookings-btn,
+    .mobile-nav-signout-btn {
+        justify-self: start;
+        padding: 5px 0;
+        border: 0;
+        background: transparent;
+        color: var(--brand-gold);
+        font: 600 0.76rem var(--font-body);
+        letter-spacing: 0.5px;
+        cursor: pointer;
+    }
+    .mobile-nav-bookings-btn { grid-column: 2; }
+    .mobile-nav-signout-btn {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+        align-self: center;
+        justify-self: end;
+    }
     .header-btn { display: none !important; } 
+    #navUserArea { display: none !important; }
     .nav-user-first-name { display: none; }
     .nav-signin-btn { padding: 9px 10px; font-size: 0.68rem; }
     .nav-user-profile { gap: 7px; }
@@ -1541,7 +1601,7 @@ body.admin-body {
 /* 2. Book Now button pinned at bottom of mobile nav menu */
 @media (max-width: 768px) {
   nav ul {
-    padding-bottom: 80px !important;
+    padding-bottom: 90px !important;
   }
   nav ul::after {
     content: '';

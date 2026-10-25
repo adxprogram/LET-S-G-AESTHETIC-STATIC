@@ -57,44 +57,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderNavUserArea() {
-        const area = document.getElementById('navUserArea');
-        if (!area) return;
-        area.replaceChildren();
+        const renderProfileAvatar = () => {
+            const avatar = document.createElement('div');
+            avatar.className = 'nav-user-avatar';
+            if (googleProfile.picture) {
+                const avatarImage = document.createElement('img');
+                avatarImage.src = googleProfile.picture;
+                avatarImage.alt = '';
+                avatarImage.referrerPolicy = 'no-referrer';
+                avatar.appendChild(avatarImage);
+            } else {
+                avatar.textContent = googleProfile.firstName.charAt(0).toUpperCase();
+            }
+            return avatar;
+        };
 
-        if (!googleProfile) {
-            const signInButton = document.createElement('button');
-            signInButton.type = 'button';
-            signInButton.className = 'nav-signin-btn';
-            signInButton.setAttribute('aria-label', 'Sign in with Google');
-            signInButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg><span>Sign In</span>';
-            signInButton.addEventListener('click', openAuthModal);
-            area.appendChild(signInButton);
-            return;
-        }
+        const renderArea = (area, isMobile) => {
+            if (!area) return;
+            area.replaceChildren();
 
-        const profile = document.createElement('div');
-        profile.className = 'nav-user-profile';
-        const avatar = document.createElement('div');
-        avatar.className = 'nav-user-avatar';
-        if (googleProfile.picture) {
-            const avatarImage = document.createElement('img');
-            avatarImage.src = googleProfile.picture;
-            avatarImage.alt = '';
-            avatarImage.referrerPolicy = 'no-referrer';
-            avatar.appendChild(avatarImage);
-        } else {
-            avatar.textContent = googleProfile.firstName.charAt(0).toUpperCase();
-        }
-        const firstName = document.createElement('span');
-        firstName.className = 'nav-user-first-name';
-        firstName.textContent = googleProfile.firstName;
-        const signOut = document.createElement('button');
-        signOut.type = 'button';
-        signOut.className = 'nav-signout-btn';
-        signOut.textContent = 'Sign Out';
-        signOut.addEventListener('click', signOutGoogle);
-        profile.append(avatar, firstName, signOut);
-        area.appendChild(profile);
+            if (!googleProfile) {
+                const signInButton = document.createElement('button');
+                signInButton.type = 'button';
+                signInButton.className = isMobile ? 'nav-signin-btn mobile-nav-signin-btn' : 'nav-signin-btn';
+                signInButton.setAttribute('aria-label', 'Sign in with Google');
+                signInButton.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg><span>${isMobile ? 'Sign in with Google' : 'Sign In'}</span>`;
+                signInButton.addEventListener('click', openAuthModal);
+                area.appendChild(signInButton);
+                return;
+            }
+
+            const profile = document.createElement('div');
+            profile.className = isMobile ? 'nav-user-profile mobile-nav-user-profile' : 'nav-user-profile';
+            profile.appendChild(renderProfileAvatar());
+
+            const firstName = document.createElement('span');
+            firstName.className = isMobile ? 'nav-user-first-name mobile-nav-user-first-name' : 'nav-user-first-name';
+            firstName.textContent = isMobile ? `Hi, ${googleProfile.firstName}` : googleProfile.firstName;
+            profile.appendChild(firstName);
+
+            if (isMobile) {
+                const myBookings = document.createElement('button');
+                myBookings.type = 'button';
+                myBookings.className = 'mobile-nav-bookings-btn';
+                myBookings.textContent = 'My Bookings';
+                myBookings.addEventListener('click', () => {
+                    showToast('Online booking management is not available yet. Please contact the clinic for booking updates.', 'info', 6000);
+                });
+                profile.appendChild(myBookings);
+            }
+
+            const signOut = document.createElement('button');
+            signOut.type = 'button';
+            signOut.className = isMobile ? 'nav-signout-btn mobile-nav-signout-btn' : 'nav-signout-btn';
+            signOut.textContent = isMobile ? 'Log Out' : 'Sign Out';
+            signOut.addEventListener('click', signOutGoogle);
+            profile.appendChild(signOut);
+            area.appendChild(profile);
+        };
+
+        renderArea(document.getElementById('navUserArea'), false);
+        renderArea(document.getElementById('navMobileAuth'), true);
     }
 
     function openAuthModal() {
