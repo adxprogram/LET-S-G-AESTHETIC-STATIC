@@ -2087,6 +2087,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('#addon-checkbox-list input[type="checkbox"]:checked').forEach(cb => addonsList.push(cb.value));
                 document.querySelectorAll('#addl-services-list input[type="checkbox"]:checked').forEach(cb => addonsList.push(cb.value));
 
+                const selectedService = document.getElementById('b-service-native').value;
+                const selectedAddons = document.querySelectorAll(
+                    '#addon-checkbox-list input[type="checkbox"]:checked, #addl-services-list input[type="checkbox"]:checked'
+                );
+                const totalPrice = Array.from(selectedAddons).reduce(
+                    (total, checkbox) => total + (parseInt(checkbox.dataset.price, 10) || 0),
+                    ADDITIONAL_PRICE_MAP[selectedService] || 0
+                );
+
                 const payload = {
                     access_key: '86e630dc-487c-4601-ab8a-eca9bedb8e9f',
                     from_name: "Let's G Aesthetics Booking Page",
@@ -2094,10 +2103,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     name:     document.getElementById('b-name').value,
                     phone:    (document.getElementById('b-phone-prefix')?.value || '+63') + document.getElementById('b-phone').value,
                     category: document.getElementById('b-category-native').value,
-                    service:  document.getElementById('b-service-native').value,
+                    service:  selectedService,
                     date:     document.getElementById('b-date-native').value,
                     notes:    document.getElementById('b-notes').value,
-                    addons:   addonsList.join(', ') || 'None'
+                    addons:   addonsList.join(', ') || 'None',
+                    total_price: '₱' + totalPrice.toLocaleString('en-PH')
                 };
 
                 try {
