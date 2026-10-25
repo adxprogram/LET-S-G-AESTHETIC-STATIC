@@ -1,5 +1,213 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- GOOGLE IDENTITY SERVICES ---
+    const GOOGLE_CLIENT_ID = '459024488278-f4ctg8jfc85m74sgfjkl6oe99krerkhj.apps.googleusercontent.com';
+    const GOOGLE_PROFILE_KEY = 'letsGGoogleProfile';
+    let googleProfile = null;
+    let googleIdentityReady = false;
+    let googleSdkPromise = null;
+
+    function loadGoogleIdentityServices() {
+        if (window.google?.accounts?.id) return Promise.resolve();
+        if (googleSdkPromise) return googleSdkPromise;
+
+        googleSdkPromise = new Promise((resolve, reject) => {
+            const sdk = document.createElement('script');
+            sdk.src = 'https://accounts.google.com/gsi/client';
+            sdk.async = true;
+            sdk.defer = true;
+            sdk.onload = resolve;
+            sdk.onerror = () => reject(new Error('Google Sign-In could not be loaded.'));
+            document.head.appendChild(sdk);
+        });
+        return googleSdkPromise;
+    }
+
+    function renderGoogleButtons() {
+        if (!googleIdentityReady) return;
+        ['googleSignInBtn', 'bookingGoogleSignInBtn'].forEach(id => {
+            const container = document.getElementById(id);
+            if (!container) return;
+            container.replaceChildren();
+            window.google.accounts.id.renderButton(container, {
+                type: 'standard',
+                theme: 'filled_black',
+                size: 'large',
+                shape: 'pill',
+                text: 'signin_with',
+                width: Math.min(container.clientWidth || 320, 360)
+            });
+        });
+    }
+
+    function applyGoogleProfileToBooking() {
+        const fullName = document.getElementById('fullName');
+        const googleEmail = document.getElementById('googleEmail');
+        const googleName = document.getElementById('googleName');
+        if (fullName) fullName.value = googleProfile?.name || '';
+        if (googleEmail) googleEmail.value = googleProfile?.email || '';
+        if (googleName) googleName.value = googleProfile?.name || '';
+    }
+
+    function renderNavUserArea() {
+        const area = document.getElementById('navUserArea');
+        if (!area) return;
+        area.replaceChildren();
+
+        if (!googleProfile) {
+            const signInButton = document.createElement('button');
+            signInButton.type = 'button';
+            signInButton.className = 'nav-signin-btn';
+            signInButton.setAttribute('aria-label', 'Sign in with Google');
+            signInButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg><span>Sign In</span>';
+            signInButton.addEventListener('click', openAuthModal);
+            area.appendChild(signInButton);
+            return;
+        }
+
+        const profile = document.createElement('div');
+        profile.className = 'nav-user-profile';
+        const avatar = document.createElement('div');
+        avatar.className = 'nav-user-avatar';
+        if (googleProfile.picture) {
+            const avatarImage = document.createElement('img');
+            avatarImage.src = googleProfile.picture;
+            avatarImage.alt = '';
+            avatarImage.referrerPolicy = 'no-referrer';
+            avatar.appendChild(avatarImage);
+        } else {
+            avatar.textContent = googleProfile.firstName.charAt(0).toUpperCase();
+        }
+        const firstName = document.createElement('span');
+        firstName.className = 'nav-user-first-name';
+        firstName.textContent = googleProfile.firstName;
+        const signOut = document.createElement('button');
+        signOut.type = 'button';
+        signOut.className = 'nav-signout-btn';
+        signOut.textContent = 'Sign Out';
+        signOut.addEventListener('click', signOutGoogle);
+        profile.append(avatar, firstName, signOut);
+        area.appendChild(profile);
+    }
+
+    function openAuthModal() {
+        const modal = document.getElementById('authModal');
+        if (!modal) return;
+        modal.classList.add('show');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        renderGoogleButtons();
+    }
+
+    function closeAuthModal() {
+        const modal = document.getElementById('authModal');
+        if (!modal) return;
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        const bookingModal = document.getElementById('modal-booking');
+        document.body.style.overflow = bookingModal?.classList.contains('show') ? 'hidden' : '';
+    }
+
+    function signOutGoogle() {
+        if (window.google?.accounts?.id) window.google.accounts.id.disableAutoSelect();
+        googleProfile = null;
+        try {
+            sessionStorage.removeItem(GOOGLE_PROFILE_KEY);
+        } catch (error) {
+            console.error('Could not clear Google sign-in state:', error);
+        }
+        renderNavUserArea();
+        applyGoogleProfileToBooking();
+    }
+
+    function createAuthModal() {
+        const modal = document.createElement('div');
+        modal.id = 'authModal';
+        modal.className = 'auth-modal';
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+            <section class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+                <button type="button" class="auth-modal-close" aria-label="Close sign-in">&times;</button>
+                <span class="auth-modal-eyebrow">Welcome to Let's G</span>
+                <h2 id="authModalTitle">Sign in</h2>
+                <p>Continue with your Google account to prefill your booking details.</p>
+                <div id="googleSignInBtn" class="google-signin-button"></div>
+            </section>`;
+        modal.addEventListener('click', event => {
+            if (event.target === modal) closeAuthModal();
+        });
+        modal.querySelector('.auth-modal-close').addEventListener('click', closeAuthModal);
+        document.body.appendChild(modal);
+    }
+
+    window.handleGoogleResponse = function(response) {
+        try {
+            const tokenParts = response.credential.split('.');
+            if (tokenParts.length !== 3) throw new Error('Google returned an invalid sign-in credential.');
+            const encodedPayload = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
+            const paddedPayload = encodedPayload.padEnd(Math.ceil(encodedPayload.length / 4) * 4, '=');
+            const binaryPayload = window.atob(paddedPayload);
+            const payloadBytes = Uint8Array.from(binaryPayload, character => character.charCodeAt(0));
+            const claims = JSON.parse(new TextDecoder().decode(payloadBytes));
+
+            const validIssuer = claims.iss === 'https://accounts.google.com' || claims.iss === 'accounts.google.com';
+            if (!validIssuer || claims.aud !== GOOGLE_CLIENT_ID || claims.exp * 1000 <= Date.now() ||
+                claims.email_verified !== true || !claims.email || !claims.name) {
+                throw new Error('Google sign-in could not verify the account details.');
+            }
+
+            googleProfile = {
+                name: claims.name,
+                firstName: claims.given_name || claims.name.split(' ')[0],
+                email: claims.email,
+                picture: claims.picture
+            };
+            try {
+                sessionStorage.setItem(GOOGLE_PROFILE_KEY, JSON.stringify(googleProfile));
+            } catch (error) {
+                console.error('Could not save Google sign-in state:', error);
+            }
+            renderNavUserArea();
+            applyGoogleProfileToBooking();
+            closeAuthModal();
+        } catch (error) {
+            console.error('Google Sign-In error:', error);
+            showToast(error.message || 'Unable to complete Google sign-in.', 'error');
+        }
+    };
+
+    createAuthModal();
+    try {
+        const savedProfile = sessionStorage.getItem(GOOGLE_PROFILE_KEY);
+        if (savedProfile) {
+            const profile = JSON.parse(savedProfile);
+            if (profile.name && profile.firstName && profile.email) {
+                googleProfile = profile;
+            } else {
+                sessionStorage.removeItem(GOOGLE_PROFILE_KEY);
+            }
+        }
+    } catch (error) {
+        console.error('Could not restore Google sign-in state:', error);
+    }
+    renderNavUserArea();
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeAuthModal();
+    });
+    loadGoogleIdentityServices().then(() => {
+        window.google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: window.handleGoogleResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true
+        });
+        googleIdentityReady = true;
+        renderGoogleButtons();
+    }).catch(error => {
+        console.error('Google Sign-In initialization error:', error);
+        showToast(error.message, 'error');
+    });
+
     // --- 0. CUSTOM TOAST NOTIFICATION ---
     function injectToastStyles() {
         if (document.getElementById('lg-toast-styles')) return;
@@ -1822,9 +2030,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         <!-- LEFT: form column -->
                         <div class="bk-form-col">
                             <form id="bookingFormPop">
+                                <input type="hidden" id="googleEmail" name="Google Account Email">
+                                <input type="hidden" id="googleName" name="Google Verified Name">
+                                <div class="booking-google-signin">
+                                    <span>Sign in with Google to auto-fill</span>
+                                    <div id="bookingGoogleSignInBtn" class="google-signin-button"></div>
+                                </div>
 
                                 <div class="form-group">
-                                    <input type="text" id="b-name" required placeholder="Full Name (e.g., Juan Dela Cruz)">
+                                    <input type="text" id="fullName" required placeholder="Full Name (e.g., Juan Dela Cruz)">
                                 </div>
                                 <div class="form-group">
                                     <div class="phone-input-wrap">
@@ -2108,13 +2322,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     access_key: '86e630dc-487c-4601-ab8a-eca9bedb8e9f',
                     from_name: "Let's G Aesthetics Booking Page",
                     subject: 'New booking request',
-                    name:     document.getElementById('b-name').value,
+                    name:     document.getElementById('fullName').value,
                     phone:    (document.getElementById('b-phone-prefix')?.value || '+63') + document.getElementById('b-phone').value,
                     category: document.getElementById('b-category-native').value,
                     service:  selectedService,
                     date:     document.getElementById('b-date-native').value,
                     notes:    document.getElementById('b-notes').value,
                     addons:   addonsList.join(', ') || 'None',
+                    'Google Account Email': document.getElementById('googleEmail').value,
+                    'Google Verified Name': document.getElementById('googleName').value,
                     price_breakdown: priceLines.join('\n\n')
                 };
 
@@ -2173,6 +2389,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         bookingModal.classList.add('show');
         document.body.style.overflow = 'hidden';
+        applyGoogleProfileToBooking();
+        renderGoogleButtons();
     };
 
     // --- 4. POP-UP MODAL CONTROLS ---
@@ -2182,12 +2400,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     window.closeModal = function(modalId) {
         const modal = document.getElementById(modalId);
-        if (modal) { modal.classList.remove('show'); document.body.style.overflow = 'auto'; }
+        if (modal) {
+            modal.classList.remove('show');
+            const authModal = document.getElementById('authModal');
+            document.body.style.overflow = authModal?.classList.contains('show') ? 'hidden' : '';
+        }
     };
     window.addEventListener('click', function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.classList.remove('show');
-            document.body.style.overflow = 'auto';
+            const authModal = document.getElementById('authModal');
+            document.body.style.overflow = authModal?.classList.contains('show') ? 'hidden' : '';
         }
     });
 
