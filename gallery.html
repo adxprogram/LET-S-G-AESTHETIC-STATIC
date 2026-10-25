@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Let's G Aesthetic and Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="script/script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="images/global/favicon.ico">
+
+    <style>
+        /* ── Gallery Page Overrides ────────────────────────────────── */
+
+        /* Hero Banner */
+        /* ── Gallery Hero (FIXED TIMING & SPACING) ── */
+        .gallery-hero {
+            position: relative;
+            padding: 160px 5% 80px; /* Enhanced top baseline spacing */
+            overflow: hidden;
+            background: var(--bg-main);
+            margin-top: 75px;
+        }
+        .gallery-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url('images/gallery/gallery-image-1.jpg') center/cover no-repeat;
+            opacity: 0.06;
+        }
+        .gallery-hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(212,175,55,0.06) 0%, transparent 70%);
+        }
+        .gallery-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+        .gallery-hero-label {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--brand-gold);
+            border: 1px solid rgba(212,175,55,0.3);
+            padding: 6px 20px;
+            margin-bottom: 24px;
+        }
+        .gallery-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            color: var(--text-main);
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+        .gallery-hero h1 em {
+            color: var(--brand-gold);
+            font-style: italic;
+        }
+        .gallery-hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            max-width: 480px;
+        }
+        /* Decorative large letter */
+        .gallery-hero-deco {
+            position: absolute;
+            right: -20px; top: 50%; transform: translateY(-50%);
+            font-family: var(--font-heading);
+            font-size: 30vw;
+            color: rgba(212,175,55,0.025);
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+        }
+
+        /* ── Masonry Gallery Grid ──────────────────────────────────── */
+        .gallery-section {
+            padding: 60px 5% 100px;
+            background: var(--bg-main);
+        }
+        .masonry-grid {
+            columns: 3;
+            column-gap: 16px;
+        }
+        @media (max-width: 900px) { .masonry-grid { columns: 2; } }
+        @media (max-width: 500px) { .masonry-grid { columns: 1; } }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: block;
+        }
+        .masonry-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(60%);
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
+        .masonry-item:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.04);
+        }
+        /* Gold border on hover */
+        .masonry-item::after {
+            content: '';
+            position: absolute; inset: 0;
+            border: 0px solid var(--brand-gold);
+            transition: border-width 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .masonry-item:hover::after {
+            border-width: 3px;
+            opacity: 1;
+        }
+        /* Overlay label */
+        .masonry-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(5,5,5,0.75) 0%, transparent 50%);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .masonry-item:hover .masonry-overlay { opacity: 1; }
+        .masonry-tag {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--brand-gold);
+            border: 1px solid rgba(212,175,55,0.5);
+            padding: 4px 12px;
+        }
+        /* Zoom icon */
+        .masonry-zoom {
+            position: absolute; top: 16px; right: 16px;
+            width: 36px; height: 36px;
+            background: rgba(212,175,55,0.9);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.7);
+        }
+        .masonry-item:hover .masonry-zoom {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ── Lightbox ──────────────────────────────────────────────── */
+        .lightbox {
+            display: none;
+            position: fixed; inset: 0;
+            z-index: 9000;
+            background: rgba(5,5,5,0.96);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            animation: lbFadeIn 0.3s ease;
+        }
+        .lightbox.open { display: flex; }
+        @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .lightbox-inner {
+            position: relative;
+            max-width: 90vw;
+            max-height: 88vh;
+            animation: lbSlide 0.35s cubic-bezier(0.25,0.8,0.25,1);
+        }
+        @keyframes lbSlide { from { opacity:0; transform: scale(0.92); } to { opacity:1; transform: scale(1); } }
+        .lightbox-inner img {
+            max-width: 90vw;
+            max-height: 80vh;
+            object-fit: contain;
+            border: 1px solid rgba(212,175,55,0.25);
+            display: block;
+        }
+        .lightbox-close {
+            position: absolute; top: -40px; right: 0;
+            background: none; border: none;
+            color: var(--text-muted); font-size: 2rem;
+            cursor: pointer; transition: color 0.2s;
+            line-height: 1;
+        }
+        .lightbox-close:hover { color: var(--brand-gold); }
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(212,175,55,0.15);
+            border: 1px solid rgba(212,175,55,0.35);
+            color: var(--brand-gold);
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.2rem;
+            transition: background 0.2s;
+        }
+        .lightbox-nav:hover { background: rgba(212,175,55,0.35); }
+        .lightbox-prev { left: -60px; }
+        .lightbox-next { right: -60px; }
+
+        @media (max-width: 700px) {
+            .lightbox-prev { left: 6px; }
+            .lightbox-next { right: 6px; }
+        }
+        .lightbox-caption {
+            margin-top: 14px;
+            text-align: center;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+        }
+        /* Counter */
+        .lightbox-counter {
+            position: absolute; bottom: -36px; left: 50%; transform: translateX(-50%);
+            font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px;
+        }
+
+        /* ── Facebook Feed Section (REFACTORED) ─────────────────────── */
+        .social-section {
+            background: var(--bg-alt);
+            padding: 80px 5%;
+            position: relative;
+            overflow: hidden;
+        }
+        .social-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .social-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .social-header-left {
+            flex: 1;
+            min-width: 280px; /* Prevents text elements from breaking down into narrow columns */
+        }
+        .social-label {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--brand-gold);
+            border: 1px solid rgba(212,175,55,0.3);
+            padding: 6px 20px;
+            margin-bottom: 16px;
+        }
+        .social-header h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+        .social-header h2 em { color: var(--brand-gold); }
+        .social-header p { color: var(--text-muted); margin-top: 10px; font-size: 0.95rem; line-height: 1.5; }
+        
+        .btn-social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: transparent;
+            border: 1px solid var(--brand-gold);
+            color: var(--brand-gold);
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 14px 28px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+        .btn-social-link:hover {
+            background: var(--brand-gold);
+            color: #000;
+        }
+
+        /* Facebook embed container */
+        .fb-embed-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+        }
+        .fb-embed-inner {
+            width: 100%;
+            max-width: 680px;
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--brand-gold);
+            background: var(--bg-main);
+            overflow: hidden;
+            position: relative;
+        }
+        .fb-embed-inner iframe {
+            display: block;
+            border: none;
+            width: 100%;
+        }
+        
+        /* Fallback card grid if FB doesn't load */
+        .fb-fallback-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+        .fb-fallback-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--brand-gold);
+            padding: 24px;
+            transition: border-color 0.3s;
+        }
+        .fb-fallback-card:hover { border-color: var(--brand-gold); }
+        .fb-card-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+        }
+        .fb-card-avatar {
+            width: 40px; height: 40px;
+            background: var(--brand-gold);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 1rem; color: #000; font-weight: 700;
+            flex-shrink: 0;
+        }
+        .fb-card-meta-name {
+            font-size: 0.85rem; font-weight: 700; color: var(--text-main);
+        }
+        .fb-card-meta-date {
+            font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;
+        }
+        .fb-card-text {
+            font-size: 0.83rem; color: var(--text-muted); line-height: 1.65;
+        }
+        .fb-card-cta {
+            margin-top: 16px;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--brand-gold); border-top: 1px solid var(--border-color);
+            padding-top: 12px; display: flex; justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Responsive Breakpoint additions for Header elements */
+        @media (max-width: 768px) {
+            .gallery-hero {
+                padding: 140px 5% 50px !important; /* Pushes content safely below the fixed header */
+            }
+            .gallery-hero h1 {
+                font-size: 2.6rem !important; /* Elegant scaled down heading sizing */
+            }
+            .social-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .btn-social-link {
+                width: 100%; /* Spans button to full width cleanly on mobile viewports */
+            }
+            .fb-fallback-grid {
+                grid-template-columns: 1fr; /* Avoid multi-column squishing on phone layout states */
+            }
+        }
+
+        /* ── CTA Strip ─────────────────────────────────────────────── */
+        .gallery-cta-strip {
+            background: var(--bg-main);
+            padding: 80px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+        .gallery-cta-strip h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 12px;
+        }
+        .gallery-cta-strip h3 em { color: var(--brand-gold); }
+        .gallery-cta-strip p {
+            color: var(--text-muted); margin-bottom: 32px; font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <a href="index.html" aria-label="Go to home page">
+            <img src="images/global/lets-g-gold.png" alt="Let's G Aesthetics" decoding="async">
+            </a>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button class="btn-primary header-btn" onclick="openBooking()">Book Now</button>
+        </div>
+    </header>
+
+    <section class="gallery-hero fade-in">
+        <div class="gallery-hero-deco">G</div>
+        <div class="gallery-hero-inner">
+            <span class="gallery-hero-label">Visual Portfolio</span>
+            <h1>The <em>Sanctuary</em><br>& Results</h1>
+            <p>A curated look into our world — clinical precision, holistic wellness, and serene luxury in every frame.</p>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <div class="masonry-grid" id="masonryGrid">
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-1.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-1.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-2.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-2.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-3.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-3.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-4.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-4.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-5.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-5.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-6.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-6.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-7.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-7.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-8.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-8.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-9.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-9.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+            <div class="masonry-item" data-src="images/gallery/gallery-image-10.jpg" data-caption="Let's G Experience">
+                <img src="images/gallery/gallery-image-10.jpg" alt="Let's G Experience" loading="lazy">
+                <div class="masonry-overlay"><span class="masonry-tag">Let's G</span></div>
+                <div class="masonry-zoom">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-inner">
+            <button class="lightbox-close" id="lbClose">&times;</button>
+            <button class="lightbox-nav lightbox-prev" id="lbPrev">&#8592;</button>
+            <button class="lightbox-nav lightbox-next" id="lbNext">&#8594;</button>
+            <img id="lbImg" src="" alt="">
+            <div class="lightbox-caption" id="lbCaption"></div>
+            <div class="lightbox-counter" id="lbCounter"></div>
+        </div>
+    </div>
+
+    <section class="social-section fade-in">
+        <div class="social-header">
+            <div class="social-header-left">
+                <span class="social-label">Stay Updated</span>
+                <h2>Latest on <em>Facebook</em></h2>
+                <p>Follow us for promos, client stories, and behind-the-scenes moments.</p>
+            </div>
+            <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" rel="noopener" class="btn-social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>
+                Visit Our Page
+            </a>
+        </div>
+
+        <div class="fb-embed-wrapper">
+            <div class="fb-embed-inner" id="fbPluginContainer">
+                <div id="fb-root"></div>
+                <div class="fb-page"
+                     data-href="https://www.facebook.com/LetsGAesthetic"
+                     data-tabs="timeline"
+                     data-width="680"
+                     data-height="600"
+                     data-small-header="true"
+                     data-adapt-container-width="true"
+                     data-hide-cover="false"
+                     data-show-facepile="false">
+                    <div id="fb-fallback" style="padding:30px 24px;">
+                        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:24px;">
+                            Loading Facebook feed… If it doesn't appear, <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" style="color:var(--brand-gold);">visit our page directly</a>.
+                        </p>
+                        <div class="fb-fallback-grid">
+                            <div class="fb-fallback-card">
+                                <div class="fb-card-header">
+                                    <div class="fb-card-avatar">G</div>
+                                    <div>
+                                        <div class="fb-card-meta-name">Let's G Aesthetic and Wellness</div>
+                                        <div class="fb-card-meta-date">Follow us for the latest updates</div>
+                                    </div>
+                                </div>
+                                <div class="fb-card-text">✨ Book your session today and experience our signature treatments — from facial peels to Japanese Headspa packages. Your glow awaits at Let's G!</div>
+                                <div class="fb-card-cta">
+                                    <span>View on Facebook</span>
+                                    <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" style="color:var(--brand-gold);font-size:0.7rem;">→</a>
+                                </div>
+                            </div>
+                            <div class="fb-fallback-card">
+                                <div class="fb-card-header">
+                                    <div class="fb-card-avatar">G</div>
+                                    <div>
+                                        <div class="fb-card-meta-name">Let's G Aesthetic and Wellness</div>
+                                        <div class="fb-card-meta-date">Valenzuela City</div>
+                                    </div>
+                                </div>
+                                <div class="fb-card-text">🌿 Open daily 11AM–9PM. Walk-ins welcome but booking ahead guarantees your slot. Call us at +63 954 176 8840 or book online!</div>
+                                <div class="fb-card-cta">
+                                    <span>View on Facebook</span>
+                                    <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" style="color:var(--brand-gold);font-size:0.7rem;">→</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery-cta-strip fade-in">
+        <h3>Ready to Experience the <em>Sanctuary?</em></h3>
+        <p>Book your session today and let us take care of the rest.</p>
+        <button class="btn-primary" onclick="openBooking()">Book Your Session</button>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo-container" style="margin-bottom: 1rem;">
+                    <img src="images/global/lets-g-footer-variant.png" alt="Let's G" decoding="async" style="max-width: 150px;">
+                </div>
+                <p>Aesthetic & Wellness Services.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="index.html#faq" style="color: var(--brand-gold); font-weight: 600;">FAQ ↑</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Visit Us</h4>
+                <ul>
+                    <li>G. Lazaro Road, Cor Isabelo Fernando, Valenzuela, 1443</li>
+                    <li><a href="tel:+639541768840">(+63) 954 176 8840</a></li>
+                    <li><a href="mailto:letsgreservation@gmail.com">letsgreservation@gmail.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 28 28" width="32" height="32">
+                        <defs><linearGradient id="gold-grad-fb" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#AA771C"/><stop offset="30%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F3E5AB"/><stop offset="70%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8A5A19"/></linearGradient></defs>
+                        <path fill="url(#gold-grad-fb)" d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/letsgaesthetic/?hl=en" target="_blank" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                        <defs><linearGradient id="gold-grad-ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#AA771C"/><stop offset="30%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F3E5AB"/><stop offset="70%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8A5A19"/></linearGradient></defs>
+                        <path fill="url(#gold-grad-ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.822a1.44 1.44 0 11-2.881 0 1.44 1.44 0 012.88 0z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Let's G Aesthetic and Wellness Services. All rights reserved.
+        </div>
+    </footer>
+
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0"
+        nonce="lets-g-gallery">
+    </script>
+
+    <script>
+    // ── Lightbox ─────────────────────────────────────────────────────
+    const lightbox   = document.getElementById('lightbox');
+    const lbImg      = document.getElementById('lbImg');
+    const lbCaption  = document.getElementById('lbCaption');
+    const lbCounter  = document.getElementById('lbCounter');
+    let currentItems = [...document.querySelectorAll('.masonry-item')];
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+        currentIndex = index;
+        showLightboxImage();
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function showLightboxImage() {
+        const item = currentItems[currentIndex];
+        lbImg.src = item.dataset.src;
+        lbCaption.textContent = item.dataset.caption || '';
+        lbCounter.textContent = `${currentIndex + 1} / ${currentItems.length}`;
+    }
+
+    currentItems.forEach((item, idx) => {
+        item.addEventListener('click', () => {
+            openLightbox(idx);
+        });
+    });
+
+    document.getElementById('lbClose').addEventListener('click', () => {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+    });
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+    });
+    document.getElementById('lbPrev').addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + currentItems.length) % currentItems.length;
+        showLightboxImage();
+    });
+    document.getElementById('lbNext').addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % currentItems.length;
+        showLightboxImage();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'ArrowLeft') { currentIndex = (currentIndex - 1 + currentItems.length) % currentItems.length; showLightboxImage(); }
+        if (e.key === 'ArrowRight') { currentIndex = (currentIndex + 1) % currentItems.length; showLightboxImage(); }
+        if (e.key === 'Escape') { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+    });
+    </script>
+</body>
+</html>

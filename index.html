@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's G Aesthetic and Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="script/script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="images/global/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <a href="index.html" aria-label="Go to home page">
+            <img src="images/global/lets-g-gold.png" alt="Let's G Aesthetics" decoding="async">
+            </a>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px;">
+
+            <button class="btn-primary header-btn" onclick="openBooking()">Book Now</button>
+        </div>
+    </header>
+
+    <section class="hero" style="position: relative; overflow: hidden;">
+        <!-- Background image with low opacity -->
+        <div style="
+            position: absolute; inset: 0;
+            background: url('images/hero/DemoReel_Video.mp4') center/cover no-repeat;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+        "></div>
+        <img src="images/hero/DemoReel_Video.mp4" alt="" aria-hidden="true"
+             onerror="this.style.display='none'"
+             style="display:none;">
+        <!-- Subtle salon/spa ambient image layer -->
+        <div style="
+            position: absolute; inset: 0;
+            background: url('images/hero/hero_background_image.jpg') center/cover no-repeat;
+            opacity: 0.10;
+            z-index: 0;
+            pointer-events: none;
+        "></div>
+        <!-- Decorative gold radial glow -->
+        <div style="
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        "></div>
+        <!-- Thin horizontal gold lines for texture -->
+        <div style="
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 59px,
+                rgba(212,175,55,0.04) 60px
+            );
+            z-index: 0;
+            pointer-events: none;
+        "></div>
+        <h1 class="fade-in" style="position:relative;z-index:1;">Your One-Stop Sanctuary</h1>
+        <p class="fade-in" style="transition-delay: 0.2s; position:relative;z-index:1;">Clinical aesthetic care and holistic physical recovery in Valenzuela City.</p>
+        <button class="btn-accent fade-in" style="transition-delay: 0.4s; position:relative;z-index:1;" onclick="openBooking()">Book Your Session</button>
+    </section>
+
+    <section class="grid-2 fade-in">
+        <div>
+            <h2>A New Standard of Self-Care</h2>
+            <p style="color: var(--text-muted); margin-top: 20px;">In the fast-paced environment of Valenzuela City, finding a reliable destination for both clinical skin care and physical recovery is a challenge. Let's G solves this by providing a centralized, mobile-first experience.</p>
+            <br>
+            <a href="services.html" class="btn-primary">Explore Treatments</a>
+        </div>
+        <div>
+            <img src="images/services/spa_indoor_image.jpg" alt="Spa Massage" style="border-radius: 4px; border: 1px solid var(--border-subtle);">
+        </div>
+    </section>
+    <!-- ===== VIDEO DEMO REEL ===== -->
+    <section class="section-dark fade-in" style="padding: 30px 5% 100px; background: var(--bg-main); overflow: hidden; position: relative;">
+        <!-- Background decorative elements -->
+        <div style="
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%);
+            pointer-events: none;
+        "></div>
+
+        <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
+            <!-- Section Label -->
+            <div class="fade-in" style="text-align: center; margin-bottom: 16px;">
+                <span style="
+                    display: inline-block;
+                    font-size: 0.7rem;
+                    letter-spacing: 4px;
+                    text-transform: uppercase;
+                    color: var(--brand-gold);
+                    border: 1px solid rgba(212,175,55,0.3);
+                    padding: 6px 20px;
+                    border-radius: 0;
+                ">Experience Let's G</span>
+            </div>
+
+            <!-- Heading -->
+            <div class="fade-in" style="text-align: center; margin-bottom: 60px;">
+                <h2 style="
+                    font-family: var(--font-heading);
+                    font-size: clamp(2rem, 5vw, 3.5rem);
+                    color: var(--text-main);
+                    margin-bottom: 16px;
+                    line-height: 1.1;
+                ">See the <em style="color: var(--brand-gold); font-style: italic;">Sanctuary</em> in Motion</h2>
+                <p style="color: var(--text-muted); font-size: 1rem; letter-spacing: 0.5px; max-width: 500px; margin: 0 auto;">
+                    A glimpse into our world of clinical precision, holistic wellness, and serene luxury.
+                </p>
+            </div>
+
+            <!-- Video Frame -->
+            <div class="fade-in" style="
+                position: relative;
+                max-width: 960px;
+                margin: 0 auto;
+            ">
+                <!-- Gold corner accents -->
+                <div style="position:absolute; top:-12px; left:-12px; width:40px; height:40px; border-top:2px solid var(--brand-gold); border-left:2px solid var(--brand-gold); z-index:2; pointer-events:none;"></div>
+                <div style="position:absolute; top:-12px; right:-12px; width:40px; height:40px; border-top:2px solid var(--brand-gold); border-right:2px solid var(--brand-gold); z-index:2; pointer-events:none;"></div>
+                <div style="position:absolute; bottom:-12px; left:-12px; width:40px; height:40px; border-bottom:2px solid var(--brand-gold); border-left:2px solid var(--brand-gold); z-index:2; pointer-events:none;"></div>
+                <div style="position:absolute; bottom:-12px; right:-12px; width:40px; height:40px; border-bottom:2px solid var(--brand-gold); border-right:2px solid var(--brand-gold); z-index:2; pointer-events:none;"></div>
+
+                <!-- Outer glow border -->
+                <div style="
+                    position: absolute; inset: 0;
+                    box-shadow: 0 0 60px rgba(212,175,55,0.08), 0 30px 80px rgba(0,0,0,0.6);
+                    border: 1px solid rgba(212,175,55,0.2);
+                    pointer-events: none;
+                    z-index: 2;
+                "></div>
+
+                <!-- Video Element -->
+                <video
+                    id="demoReelVideo"
+                    src="images/hero/DemoReel_Video.mp4"
+                    poster="images/hero/thumbnail_image.jpg"
+                    loop
+                    playsinline
+                    style="
+                        display: block;
+                        width: 100%;
+                        aspect-ratio: 16/9;
+                        object-fit: cover;
+                        background: #0a0a0a;
+                        cursor: pointer;
+                    "
+                    onclick="toggleDemoReel(this)"
+                ></video>
+
+                <!-- Play Button Overlay -->
+                <div id="demoReelPlayBtn" style="
+                    position: absolute; inset: 0;
+                    display: flex; flex-direction: column;
+                    align-items: center; justify-content: center;
+                    background: rgba(5,5,5,0.45);
+                    cursor: pointer;
+                    transition: background 0.3s ease;
+                    z-index: 3;
+                " onclick="toggleDemoReel(document.getElementById('demoReelVideo'))"
+                   onmouseenter="this.style.background='rgba(5,5,5,0.3)'"
+                   onmouseleave="this.style.background='rgba(5,5,5,0.45)'">
+                    <!-- Play circle -->
+                    <div style="
+                        width: 80px; height: 80px;
+                        border-radius: 50%;
+                        background: rgba(212,175,55,0.15);
+                        border: 2px solid var(--brand-gold);
+                        display: flex; align-items: center; justify-content: center;
+                        backdrop-filter: blur(4px);
+                        transition: transform 0.3s ease, background 0.3s ease;
+                        margin-bottom: 16px;
+                    " onmouseenter="this.style.background='rgba(212,175,55,0.28)'; this.style.transform='scale(1.08)'"
+                       onmouseleave="this.style.background='rgba(212,175,55,0.15)'; this.style.transform='scale(1)'">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--brand-gold)" style="margin-left:4px;">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                    </div>
+                    <span style="
+                        font-size: 0.75rem;
+                        letter-spacing: 3px;
+                        text-transform: uppercase;
+                        color: rgba(255,255,255,0.7);
+                        font-family: var(--font-body);
+                    ">Play Demo Reel</span>
+                </div>
+            </div>
+
+            <!-- Stats row below video -->
+            <div class="fade-in" style="
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1px;
+                background: rgba(212,175,55,0.15);
+                max-width: 700px;
+                margin: 60px auto 0;
+                border: 1px solid rgba(212,175,55,0.15);
+            ">
+                <div style="background: var(--bg-main); padding: 28px 20px; text-align: center;">
+                    <div style="font-family: var(--font-heading); font-size: 2rem; color: var(--brand-gold); font-style: italic; margin-bottom: 6px;">10+</div>
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted);">Service Categories</div>
+                </div>
+                <div style="background: var(--bg-main); padding: 28px 20px; text-align: center;">
+                    <div style="font-family: var(--font-heading); font-size: 2rem; color: var(--brand-gold); font-style: italic; margin-bottom: 6px;">80+</div>
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted);">Treatments Offered</div>
+                </div>
+                <div style="background: var(--bg-main); padding: 28px 20px; text-align: center;">
+                    <div style="font-family: var(--font-heading); font-size: 2rem; color: var(--brand-gold); font-style: italic; margin-bottom: 6px;">11AM</div>
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted);">Open Daily</div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+<!-- ===== TESTIMONIALS SECTION ===== -->
+    <section class="fade-in" style="padding: 100px 5%; background: var(--bg-main); position: relative; overflow: hidden;">
+
+        <!-- Decorative background -->
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(212,175,55,0.04) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;left:-30px;top:50%;transform:translateY(-50%);font-family:var(--font-heading);font-size:22rem;color:rgba(212,175,55,0.025);line-height:1;pointer-events:none;user-select:none;">"</div>
+
+        <div style="max-width:1200px;margin:0 auto;position:relative;z-index:1;">
+
+            <!-- Header -->
+            <div style="margin-bottom:60px;">
+                <span style="display:inline-block;font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--brand-gold);border:1px solid rgba(212,175,55,0.3);padding:6px 20px;margin-bottom:20px;">Client Stories</span>
+                <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;">
+                    <h2 style="font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);color:var(--text-main);line-height:1.1;">What Our Clients <em style="color:var(--brand-gold);">Are Saying</em></h2>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="display:flex;gap:3px;" id="testimonial-stars-avg">
+                            <span style="color:var(--brand-gold);font-size:1rem;">★★★★★</span>
+                        </div>
+                        <span style="font-size:0.78rem;color:var(--text-muted);letter-spacing:1px;">5.0 across all reviews</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Track -->
+            <div style="position:relative;overflow:hidden;" id="testimonial-viewport">
+                <div id="testimonial-track" style="display:flex;gap:24px;transition:transform 0.5s cubic-bezier(0.25,0.8,0.25,1);will-change:transform;">
+
+                    <!-- Card 1 -->
+                    <div class="t-card" style="flex:0 0 calc(33.333% - 16px);background:var(--bg-alt);border:1px solid var(--border-color);border-top:3px solid var(--brand-gold);padding:36px 30px;display:flex;flex-direction:column;gap:20px;min-width:0;">
+                        <div style="color:var(--brand-gold);font-size:1.1rem;letter-spacing:2px;">★★★★★</div>
+                        <p style="color:var(--text-main);font-family:var(--font-heading);font-size:1.05rem;font-style:italic;line-height:1.6;flex:1;">"Highly recommended. Accomodating and friendly ang mga staff pati Owner. Suki na since 2025 ❤️"</p>
+                        <div style="border-top:1px solid var(--border-color);padding-top:18px;display:flex;align-items:center;gap:14px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--brand-gold),#AA771C);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:1rem;color:#000;font-weight:700;flex-shrink:0;">A</div>
+                            <div>
+                                <div style="font-size:0.88rem;font-weight:700;color:var(--text-main);">Yhang L.</div>
+                                <!-- <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Japanese Headspa</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="t-card" style="flex:0 0 calc(33.333% - 16px);background:var(--bg-alt);border:1px solid var(--border-color);border-top:3px solid var(--brand-gold);padding:36px 30px;display:flex;flex-direction:column;gap:20px;min-width:0;">
+                        <div style="color:var(--brand-gold);font-size:1.1rem;letter-spacing:2px;">★★★★★</div>
+                        <p style="color:var(--text-main);font-family:var(--font-heading);font-size:1.05rem;font-style:italic;line-height:1.6;flex:1;">"Very Nice and  clean place! The linens and massage area are very hygienic, The nail services are excellent, and all the staff are accommodating and friendly. I will definitely comeback and recommend to my family and friends. 🥰"</p>
+                        <div style="border-top:1px solid var(--border-color);padding-top:18px;display:flex;align-items:center;gap:14px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--brand-gold),#AA771C);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:1rem;color:#000;font-weight:700;flex-shrink:0;">M</div>
+                            <div>
+                                <div style="font-size:0.88rem;font-weight:700;color:var(--text-main);">Rosie M.</div>
+                                <!-- <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Carbon Laser Facial</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="t-card" style="flex:0 0 calc(33.333% - 16px);background:var(--bg-alt);border:1px solid var(--border-color);border-top:3px solid var(--brand-gold);padding:36px 30px;display:flex;flex-direction:column;gap:20px;min-width:0;">
+                        <div style="color:var(--brand-gold);font-size:1.1rem;letter-spacing:2px;">★★★★★</div>
+                        <p style="color:var(--text-main);font-family:var(--font-heading);font-size:1.05rem;font-style:italic;line-height:1.6;flex:1;">"Very accommodating staff and lahat ng tanong mo masasagot, Maayos din sila gumawa and nasarapan ako sa Massage
+Na enjoy din namn ng Partner ko yung Head Spa and Facial. Will definitely come back here soon to try yung mga Drip nila 😍🤭"</p>
+                        <div style="border-top:1px solid var(--border-color);padding-top:18px;display:flex;align-items:center;gap:14px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--brand-gold),#AA771C);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:1rem;color:#000;font-weight:700;flex-shrink:0;">J</div>
+                            <div>
+                                <div style="font-size:0.88rem;font-weight:700;color:var(--text-main);">Abi A.</div>
+                                <!-- <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Gluta Drip Package</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="t-card" style="flex:0 0 calc(33.333% - 16px);background:var(--bg-alt);border:1px solid var(--border-color);border-top:3px solid var(--brand-gold);padding:36px 30px;display:flex;flex-direction:column;gap:20px;min-width:0;">
+                        <div style="color:var(--brand-gold);font-size:1.1rem;letter-spacing:2px;">★★★★★</div>
+                        <p style="color:var(--text-main);font-family:var(--font-heading);font-size:1.05rem;font-style:italic;line-height:1.6;flex:1;">"Super recommended and affordable po! Super bait pa ng staff na nagcater ng service ko 🥰 
+Very relaxing yung Hair/Head Spa and ang daming promos and offers na abot kaya ang budget!!! I also have a back massage 🥺 it was recommended by my mother and super worth it naman 💗
+Looking forward po me na itry din other services soon! Thank you so much for the birthday treat/promo as well 🥰💗"</p>
+                        <div style="border-top:1px solid var(--border-color);padding-top:18px;display:flex;align-items:center;gap:14px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--brand-gold),#AA771C);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:1rem;color:#000;font-weight:700;flex-shrink:0;">R</div>
+                            <div>
+                                <div style="font-size:0.88rem;font-weight:700;color:var(--text-main);">Melly V.</div>
+                                <!-- <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Deep Tissue + Hotstone</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="t-card" style="flex:0 0 calc(33.333% - 16px);background:var(--bg-alt);border:1px solid var(--border-color);border-top:3px solid var(--brand-gold);padding:36px 30px;display:flex;flex-direction:column;gap:20px;min-width:0;">
+                        <div style="color:var(--brand-gold);font-size:1.1rem;letter-spacing:2px;">★★★★★</div>
+                        <p style="color:var(--text-main);font-family:var(--font-heading);font-size:1.05rem;font-style:italic;line-height:1.6;flex:1;">"We super love the head spa, hair spa, body scrub and the massage. The experience was so amazing. And the attendants were so friendly and accommodating to our queries that's why will definitely be back."</p>
+                        <div style="border-top:1px solid var(--border-color);padding-top:18px;display:flex;align-items:center;gap:14px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--brand-gold),#AA771C);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:1rem;color:#000;font-weight:700;flex-shrink:0;">S</div>
+                            <div>
+                                <div style="font-size:0.88rem;font-weight:700;color:var(--text-main);">Analyn O.</div>
+                                <!-- <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Exosomes Facial</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Navigation dots & arrows -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:36px;">
+                <div style="display:flex;gap:8px;" id="testimonial-dots">
+                    <button onclick="goToSlide(0)" style="width:28px;height:4px;background:var(--brand-gold);border:none;cursor:pointer;transition:all 0.3s;padding:0;" class="t-dot active"></button>
+                    <button onclick="goToSlide(1)" style="width:28px;height:4px;background:var(--border-color);border:none;cursor:pointer;transition:all 0.3s;padding:0;" class="t-dot"></button>
+                    <button onclick="goToSlide(2)" style="width:28px;height:4px;background:var(--border-color);border:none;cursor:pointer;transition:all 0.3s;padding:0;" class="t-dot"></button>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button onclick="shiftTestimonial(-1)" style="width:44px;height:44px;background:transparent;border:1px solid var(--border-color);color:var(--text-muted);font-size:1.1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.borderColor='var(--brand-gold)';this.style.color='var(--brand-gold)'" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)'">&#8592;</button>
+                    <button onclick="shiftTestimonial(1)"  style="width:44px;height:44px;background:transparent;border:1px solid var(--border-color);color:var(--text-muted);font-size:1.1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.borderColor='var(--brand-gold)';this.style.color='var(--brand-gold)'" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)'">&#8594;</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        (function() {
+            const track    = document.getElementById('testimonial-track');
+            const viewport = document.getElementById('testimonial-viewport');
+            const dots     = document.querySelectorAll('.t-dot');
+            const cards    = document.querySelectorAll('.t-card');
+            let current    = 0;
+            let perView    = 3;
+            let maxSlide   = 0;
+
+            function calcPerView() {
+                const w = viewport.offsetWidth;
+                perView = w < 600 ? 1 : w < 900 ? 2 : 3;
+                maxSlide = Math.max(0, cards.length - perView);
+                // Responsive card widths
+                const gap = 24;
+                cards.forEach(c => {
+                    c.style.flex = `0 0 calc(${100/perView}% - ${gap*(perView-1)/perView}px)`;
+                });
+            }
+
+            function updateDots(idx) {
+                dots.forEach((d, i) => {
+                    d.style.background = i === idx ? 'var(--brand-gold)' : 'var(--border-color)';
+                    d.style.width      = i === idx ? '40px' : '28px';
+                });
+            }
+
+            function goToSlide(idx) {
+                calcPerView();
+                current = Math.max(0, Math.min(idx, maxSlide));
+                const cardW = cards[0].offsetWidth + 24;
+                track.style.transform = `translateX(-${current * cardW}px)`;
+                updateDots(current);
+            }
+
+            window.shiftTestimonial = function(dir) { goToSlide(current + dir); };
+            window.goToSlide        = function(idx)  { goToSlide(idx); };
+
+            // Auto-advance every 5s
+            let timer = setInterval(() => goToSlide((current + 1) > maxSlide ? 0 : current + 1), 5000);
+            viewport.addEventListener('mouseenter', () => clearInterval(timer));
+            viewport.addEventListener('mouseleave', () => { timer = setInterval(() => goToSlide((current + 1) > maxSlide ? 0 : current + 1), 5000); });
+
+            // Touch swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            viewport.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+
+                const diff = touchStartX - touchEndX;
+
+                if (Math.abs(diff) > 40) {
+                    goToSlide(diff > 0 ? current + 1 : current - 1);
+                }
+            }, { passive: true });
+
+            calcPerView();
+            window.addEventListener('resize', () => goToSlide(0));
+        })();
+        </script>
+    </section>
+    <!-- ===== END TESTIMONIALS SECTION ===== -->
+
+
+    <!-- ===== FAQ SECTION ===== -->
+    <section id="faq" class="section-light fade-in" style="padding: 100px 5%; background: var(--bg-alt); position: relative; overflow: hidden;">
+        <!-- Decorative large letter -->
+        <div style="
+            position: absolute; right: -30px; top: 50%; transform: translateY(-50%);
+            font-family: var(--font-heading); font-size: 22rem; color: rgba(212,175,55,0.025);
+            line-height: 1; pointer-events: none; user-select: none; z-index: 0;
+        ">?</div>
+
+        <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 1;">
+            <!-- Header -->
+            <div style="margin-bottom: 60px;">
+                <span style="
+                    display: inline-block;
+                    font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+                    color: var(--brand-gold); border: 1px solid rgba(212,175,55,0.3);
+                    padding: 6px 20px; margin-bottom: 20px;
+                ">Got Questions?</span>
+                <h2 style="
+                    font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3rem);
+                    color: var(--text-main); line-height: 1.1;
+                ">Frequently Asked <em style="color: var(--brand-gold);">Questions</em></h2>
+            </div>
+
+            <!-- FAQ Items -->
+            <div id="faq-list">
+                <!-- Item -->
+                <div class="faq-item" style="border-bottom: 1px solid var(--border-color);">
+                    <button class="faq-trigger" onclick="toggleFaq(this)" style="
+                        width: 100%; background: none; border: none; cursor: pointer;
+                        display: flex; justify-content: space-between; align-items: center;
+                        padding: 24px 0; text-align: left; gap: 20px;
+                    ">
+                        <span style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-main); font-weight: 600;">Do I need to book an appointment in advance?</span>
+                        <span class="faq-icon" style="color: var(--brand-gold); font-size: 1.4rem; flex-shrink: 0; transition: transform 0.3s ease; line-height: 1;">+</span>
+                    </button>
+                    <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease;">
+                        <p style="color: var(--text-muted); padding-bottom: 24px; line-height: 1.8; font-size: 0.95rem;">
+                            Walk-ins are welcome, but booking ahead guarantees your preferred time slot and therapist. You can book online via our website or call us directly at <a href="tel:+639541768840" target="_blank"><strong style="color: var(--text-main);">(+63) 954 176 8840</strong></a>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="border-bottom: 1px solid var(--border-color);">
+                    <button class="faq-trigger" onclick="toggleFaq(this)" style="
+                        width: 100%; background: none; border: none; cursor: pointer;
+                        display: flex; justify-content: space-between; align-items: center;
+                        padding: 24px 0; text-align: left; gap: 20px;
+                    ">
+                        <span style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-main); font-weight: 600;">What are your clinic hours?</span>
+                        <span class="faq-icon" style="color: var(--brand-gold); font-size: 1.4rem; flex-shrink: 0; transition: transform 0.3s ease; line-height: 1;">+</span>
+                    </button>
+                    <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease;">
+                        <p style="color: var(--text-muted); padding-bottom: 24px; line-height: 1.8; font-size: 0.95rem;">
+                            We are open every day from <strong style="color: var(--text-main);">11:00 AM to 9:00 PM</strong>, Monday through Sunday — including holidays. Last bookings are accepted at 8:00 PM.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="border-bottom: 1px solid var(--border-color);">
+                    <button class="faq-trigger" onclick="toggleFaq(this)" style="
+                        width: 100%; background: none; border: none; cursor: pointer;
+                        display: flex; justify-content: space-between; align-items: center;
+                        padding: 24px 0; text-align: left; gap: 20px;
+                    ">
+                        <span style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-main); font-weight: 600;">Are your treatments safe for sensitive skin?</span>
+                        <span class="faq-icon" style="color: var(--brand-gold); font-size: 1.4rem; flex-shrink: 0; transition: transform 0.3s ease; line-height: 1;">+</span>
+                    </button>
+                    <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease;">
+                        <p style="color: var(--text-muted); padding-bottom: 24px; line-height: 1.8; font-size: 0.95rem;">
+                            Yes. All treatments begin with a consultation to assess your skin type and condition. Our licensed aestheticians tailor every procedure to your needs. Please inform us of any allergies or medical conditions prior to your appointment.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="border-bottom: 1px solid var(--border-color);">
+                    <button class="faq-trigger" onclick="toggleFaq(this)" style="
+                        width: 100%; background: none; border: none; cursor: pointer;
+                        display: flex; justify-content: space-between; align-items: center;
+                        padding: 24px 0; text-align: left; gap: 20px;
+                    ">
+                        <span style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-main); font-weight: 600;">Do you offer package deals or promos?</span>
+                        <span class="faq-icon" style="color: var(--brand-gold); font-size: 1.4rem; flex-shrink: 0; transition: transform 0.3s ease; line-height: 1;">+</span>
+                    </button>
+                    <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease;">
+                        <p style="color: var(--text-muted); padding-bottom: 24px; line-height: 1.8; font-size: 0.95rem;">
+                            Absolutely. Many of our laser, drip, and slimming treatments come with multi-session packages (e.g., 5+1, 5+2, 6+2). Our Headspa and massage packages also bundle multiple services for great value. Ask our staff for the latest promos.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="border-bottom: 1px solid var(--border-color);">
+                    <button class="faq-trigger" onclick="toggleFaq(this)" style="
+                        width: 100%; background: none; border: none; cursor: pointer;
+                        display: flex; justify-content: space-between; align-items: center;
+                        padding: 24px 0; text-align: left; gap: 20px;
+                    ">
+                        <span style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-main); font-weight: 600;">Where exactly are you located?</span>
+                        <span class="faq-icon" style="color: var(--brand-gold); font-size: 1.4rem; flex-shrink: 0; transition: transform 0.3s ease; line-height: 1;">+</span>
+                    </button>
+                    <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease;">
+                        <p style="color: var(--text-muted); padding-bottom: 24px; line-height: 1.8; font-size: 0.95rem;">
+                            We are at <strong style="color: var(--text-main);">G. Lazaro Road, corner Isabelo Fernando, Dalandanan, Valenzuela City, 1443</strong>. You can find us on Google Maps — search "Let's G Aesthetic and Wellness Services."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="border-bottom: 1px solid var(--border-color);">
+                    <button class="faq-trigger" onclick="toggleFaq(this)" style="
+                        width: 100%; background: none; border: none; cursor: pointer;
+                        display: flex; justify-content: space-between; align-items: center;
+                        padding: 24px 0; text-align: left; gap: 20px;
+                    ">
+                        <span style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-main); font-weight: 600;">What payment methods do you accept?</span>
+                        <span class="faq-icon" style="color: var(--brand-gold); font-size: 1.4rem; flex-shrink: 0; transition: transform 0.3s ease; line-height: 1;">+</span>
+                    </button>
+                    <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease;">
+                        <p style="color: var(--text-muted); padding-bottom: 24px; line-height: 1.8; font-size: 0.95rem;">
+                            We accept cash, GCash, and major e-wallets. For large package payments, please coordinate with our front desk staff prior to your session.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div style="margin-top: 50px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Still have questions?</span>
+                <a href="contact.html" class="btn-primary" style="padding: 12px 28px; font-size: 0.8rem;">Contact Us</a>
+            </div>
+        </div>
+
+        <script>
+        function toggleFaq(trigger) {
+            const item   = trigger.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const icon   = trigger.querySelector('.faq-icon');
+            const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+
+            // Close all
+            document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0px');
+            document.querySelectorAll('.faq-icon').forEach(i => { i.textContent = '+'; i.style.transform = 'rotate(0deg)'; });
+
+            if (!isOpen) {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                icon.textContent = '×';
+                icon.style.transform = 'rotate(90deg)';
+            }
+        }
+        </script>
+    </section>
+<footer>
+    <div class="footer-grid">
+        
+        <div class="footer-col">
+            <div class="footer-logo-container" style="margin-bottom: 1rem;">
+                <img src="images/global/lets-g-footer-variant.png" alt="Let's G" decoding="async" style="max-width: 150px;">
+            </div>
+            <p>Aesthetic & Wellness Services.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="#faq" style="color: var(--brand-gold); font-weight: 600;">FAQ ↑</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Visit Us</h4>
+            <ul>
+                <li>G. Lazaro Road, Cor Isabelo Fernando, Valenzuela, 1443</li>
+                <li><a href="tel:+639541768840">(+63) 954 176 8840</a></li>
+                <li><a href="mailto:letsgreservation@gmail.com">letsgreservation@gmail.com</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+                <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 28 28" width="32" height="32">
+                    <defs>
+                        <linearGradient id="gold-grad-fb" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#AA771C" />
+                        <stop offset="30%" stop-color="#D4AF37" />
+                        <stop offset="50%" stop-color="#F3E5AB" />
+                        <stop offset="70%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#8A5A19" />
+                        </linearGradient>
+                    </defs>
+                    <path fill="url(#gold-grad-fb)" d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
+                    </svg>
+                </a>
+
+                <a href="https://www.instagram.com/letsgaesthetic/?hl=en" target="_blank" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                    <defs>
+                        <linearGradient id="gold-grad-ig" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#AA771C" />
+                        <stop offset="30%" stop-color="#D4AF37" />
+                        <stop offset="50%" stop-color="#F3E5AB" />
+                        <stop offset="70%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#8A5A19" />
+                        </linearGradient>
+                    </defs>
+                    <path fill="url(#gold-grad-ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.822a1.44 1.44 0 11-2.881 0 1.44 1.44 0 012.88 0z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; 2026 Let's G Aesthetic and Wellness Services. All rights reserved.
+    </div>
+</footer>
+</body>
+</html>

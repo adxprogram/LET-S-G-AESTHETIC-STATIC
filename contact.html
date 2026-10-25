@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Let's G Aesthetic and Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="script/script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="images/global/favicon.ico">
+
+<style>
+        /* ── Contact Page Styles ──────────────────────────────────── */
+
+        /* Hero */
+        .contact-hero {
+            position: relative;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 120px 5% 60px; /* Added top padding block protection to avoid header overlaps */
+            overflow: hidden;
+            background: var(--bg-main);
+            margin-top: 75px;
+        }
+        .contact-hero-bg {
+            position: absolute; inset: 0;
+            background: url('images/hero/contact_hero_image.jpg') center/cover no-repeat;
+            opacity: 0.09;
+        }
+        .contact-hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(5,5,5,0) 30%, rgba(5,5,5,1) 100%);
+        }
+        .contact-hero-glow {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(212,175,55,0.06) 0%, transparent 70%);
+        }
+        /* Decorative horizontal lines */
+        .contact-hero-lines {
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(212,175,55,0.03) 60px);
+            pointer-events: none;
+        }
+        .contact-hero-inner {
+            position: relative; z-index: 1;
+            max-width: 900px;
+        }
+        .contact-hero-label {
+            display: inline-block;
+            font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--brand-gold); border: 1px solid rgba(212,175,55,0.3);
+            padding: 6px 20px; margin-bottom: 24px;
+        }
+        .contact-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 7vw, 6rem);
+            line-height: 1;
+            color: var(--text-main);
+            margin-bottom: 18px;
+        }
+        .contact-hero h1 em { color: var(--brand-gold); font-style: italic; }
+        .contact-hero p {
+            color: var(--text-muted); font-size: 1rem; letter-spacing: 0.5px;
+            max-width: 480px; line-height: 1.8;
+        }
+        /* Decorative large letter */
+        .contact-deco {
+            position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+            font-family: var(--font-heading); font-size: 28vw;
+            color: rgba(212,175,55,0.025); line-height: 1;
+            pointer-events: none; user-select: none; z-index: 0;
+        }
+
+        /* ── Info Strip ────────────────────────────────────────────── */
+        .contact-strip {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0;
+        }
+        .contact-strip-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+        }
+        .strip-item {
+            padding: 40px 40px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            transition: background 0.3s;
+        }
+        .strip-item:last-child { border-right: none; }
+        .strip-item:hover { background: rgba(212,175,55,0.03); }
+        .strip-icon {
+            width: 44px; height: 44px;
+            border: 1px solid rgba(212,175,55,0.4);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            color: var(--brand-gold);
+        }
+        .strip-label {
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--brand-gold); margin-bottom: 8px;
+        }
+        .strip-value {
+            font-size: 0.9rem; color: var(--text-main); line-height: 1.7;
+        }
+        .strip-value a { color: var(--text-main); transition: color 0.2s; }
+        .strip-value a:hover { color: var(--brand-gold); }
+
+        /* ── Main Content ──────────────────────────────────────────── */
+        .contact-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            background: var(--bg-main);
+        }
+
+        /* Left: Form Panel */
+        .contact-form-panel {
+            padding: 80px 60px 80px 5%;
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+        .contact-form-panel::before {
+            content: '';
+            position: absolute; top: 0; left: 5%; right: 0; height: 3px;
+            background: linear-gradient(to right, var(--brand-gold), transparent);
+        }
+        .cf-heading-label {
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 4px;
+            color: var(--brand-gold); margin-bottom: 12px; display: block;
+        }
+        .cf-heading {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            color: var(--text-main); margin-bottom: 8px; line-height: 1.1;
+        }
+        .cf-subtext {
+            color: var(--text-muted); font-size: 0.88rem; margin-bottom: 40px; line-height: 1.7;
+        }
+
+        /* Styled Form Inputs */
+        .cf-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .cf-label {
+            display: block;
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--text-muted); margin-bottom: 8px;
+        }
+        .cf-input, .cf-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            transition: border-color 0.25s, background 0.25s;
+            outline: none;
+        }
+        .cf-input:focus, .cf-textarea:focus {
+            border-color: var(--brand-gold);
+            border-bottom-color: var(--brand-gold);
+            background: rgba(212,175,55,0.03);
+        }
+        .cf-input::placeholder, .cf-textarea::placeholder { color: var(--text-muted); }
+        .cf-textarea { resize: none; height: 130px; }
+
+        /* Input row */
+        .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* Submit button */
+        .cf-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--brand-gold);
+            color: #000;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .cf-submit:hover {
+            background: transparent;
+            color: var(--brand-gold);
+            outline: 1px solid var(--brand-gold);
+        }
+        .cf-submit:active { transform: scale(0.99); }
+
+        /* Success state */
+        .cf-success {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .cf-success-icon {
+            width: 60px; height: 60px;
+            border: 2px solid var(--brand-gold);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--brand-gold); font-size: 1.5rem;
+        }
+        .cf-success h3 { font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 10px; }
+        .cf-success p { color: var(--text-muted); font-size: 0.88rem; }
+
+        /* Right: Map + Details Panel */
+        .contact-info-panel {
+            padding: 80px 5% 80px 60px;
+            position: relative;
+            background: var(--bg-alt);
+        }
+
+        .ci-heading-label {
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 4px;
+            color: var(--brand-gold); margin-bottom: 12px; display: block;
+        }
+        .ci-heading {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            color: var(--text-main); margin-bottom: 8px; line-height: 1.1;
+        }
+        .ci-subtext {
+            color: var(--text-muted); font-size: 0.88rem; margin-bottom: 36px; line-height: 1.7;
+        }
+
+        /* Map */
+        .ci-map {
+            width: 100%;
+            height: 260px;
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--brand-gold);
+            overflow: hidden;
+            margin-bottom: 36px;
+            position: relative;
+        }
+        .ci-map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+        /* Hours Table */
+        .hours-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 36px;
+        }
+        .hours-table tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .hours-table tr:last-child { border-bottom: none; }
+        .hours-table td {
+            padding: 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .hours-table td:first-child {
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .hours-table td:last-child {
+            text-align: right;
+            color: var(--brand-gold);
+        }
+        /* ── Refined Hours Open Badge ── */
+        .hours-open-badge {
+            display: inline-block;
+            font-size: 0.58rem !important; /* Scaled text footprint to fit narrow containers */
+            text-transform: uppercase; 
+            letter-spacing: 1.5px;
+            background: rgba(46,204,113,0.12);
+            color: #2ecc71;
+            border: 1px solid rgba(46,204,113,0.25);
+            padding: 2px 8px;
+            margin-left: 6px;
+            vertical-align: middle;
+            border-radius: 2px;
+        }
+
+        /* Social buttons */
+        .ci-social-row {
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        .ci-social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 10px 18px;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+        .ci-social-btn:hover {
+            border-color: var(--brand-gold);
+            color: var(--brand-gold);
+        }
+
+        /* ── Bottom CTA Band ───────────────────────────────────────── */
+        .contact-cta-band {
+            background: var(--bg-main);
+            padding: 60px 5%;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 40px;
+        }
+        .cta-band-left h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            margin-bottom: 8px;
+        }
+        .cta-band-left h3 em { color: var(--brand-gold); }
+        .cta-band-left p { color: var(--text-muted); font-size: 0.88rem; }
+        
+        /* ==========================================================================
+           RESPONSIVE REFACTOR & MEDIA QUERIES
+           ========================================================================== */
+        
+        @media (max-width: 1024px) {
+            .contact-form-panel {
+                padding: 80px 40px 80px 5%;
+            }
+            .contact-info-panel {
+                padding: 80px 5% 80px 40px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .contact-body { 
+                grid-template-columns: 1fr; 
+            }
+            .contact-form-panel { 
+                padding: 60px 5%; 
+                border-right: none; 
+                border-bottom: 1px solid var(--border-color); 
+            }
+            .contact-form-panel::before {
+                left: 0;
+                background: linear-gradient(to right, var(--brand-gold), var(--brand-gold-hover));
+            }
+            .contact-info-panel { 
+                padding: 60px 5%; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contact-strip-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .strip-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 30px 5%;
+            }
+            .strip-item:last-child {
+                border-bottom: none;
+            }
+            .contact-cta-band { 
+                grid-template-columns: 1fr; 
+                gap: 24px;
+                text-align: center;
+            }
+            .cf-submit, .btn-primary {
+                width: 100% !important;
+            }
+        }
+
+        /* ── Mobile Layout Refinements ── */
+        @media (max-width: 768px) {
+            .cf-row { 
+                grid-template-columns: 1fr; 
+                gap: 0;
+            }
+            .contact-hero {
+                min-height: auto !important;
+                padding-top: 140px !important; /* Extra breathing space for mobile touch-headers */
+                padding-bottom: 40px !important;
+            }
+            .contact-hero h1 {
+                font-size: 2.5rem !important; /* Scale heading proportions elegantly down */
+            }
+            .contact-hero-label {
+                margin-bottom: 16px !important;
+            }
+        }
+
+        /* Ensure table data handles text wrapping gracefully on mobile */
+        @media (max-width: 480px) {
+            .hours-table td {
+                font-size: 0.78rem !important; /* Drop size slightly on tight screens */
+                padding: 10px 0 !important;
+            }
+            .hours-table td:first-child {
+                letter-spacing: 0.5px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <a href="index.html" aria-label="Go to home page">
+            <img src="images/global/lets-g-gold.png" alt="Let's G Aesthetics" decoding="async">
+            </a>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button class="btn-primary header-btn" onclick="openBooking()">Book Now</button>
+        </div>
+    </header>
+
+    <!-- ── HERO ── -->
+    <section class="contact-hero fade-in">
+        <div class="contact-hero-bg"></div>
+        <div class="contact-hero-overlay"></div>
+        <div class="contact-hero-glow"></div>
+        <div class="contact-hero-lines"></div>
+        <div class="contact-deco">C</div>
+        <div class="contact-hero-inner">
+            <span class="contact-hero-label">We'd Love to Hear From You</span>
+            <h1>Get in <em>Touch</em></h1>
+            <p>Located in the heart of Dalandanan, Valenzuela City. We're open every day — walk in or book your visit in advance.</p>
+        </div>
+    </section>
+
+    <!-- ── INFO STRIP ── -->
+    <div class="contact-strip fade-in">
+        <div class="contact-strip-grid">
+            <div class="strip-item">
+                <div class="strip-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="strip-label">Address</div>
+                    <div class="strip-value">G. Lazaro Road, Cor Isabelo Fernando<br>Dalandanan, Valenzuela City 1443</div>
+                </div>
+            </div>
+            <div class="strip-item">
+                <div class="strip-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9a16 16 0 0 0 6.29 6.29l.61-.61a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 17z"/></svg>
+                </div>
+                <div>
+                    <div class="strip-label">Phone</div>
+                    <div class="strip-value">
+                        <a href="tel:+639541768840">(+63) 954 176 8840</a><br>
+                        <a href="mailto:letsgreservation@gmail.com" style="font-size:0.82rem;">letsgreservation@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+            <div class="strip-item">
+                <div class="strip-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                    <div class="strip-label">Clinic Hours</div>
+                    <div class="strip-value">
+                        Mon – Sun: <strong style="color:var(--brand-gold);">11:00 AM – 9:00 PM</strong><br>
+                        <span style="font-size:0.78rem;">Last booking accepted at 8:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── MAIN CONTENT: FORM + MAP ── -->
+    <div class="contact-body">
+
+        <!-- Form Panel -->
+        <div class="contact-form-panel fade-in">
+            <span class="cf-heading-label">Send Us a Message</span>
+            <h2 class="cf-heading">We'll Get Back<br>to You Shortly</h2>
+            <p class="cf-subtext">Have a question about a service, a promo, or want to schedule a consultation? Drop us a message and we'll respond as soon as possible.</p>
+
+            <form id="contactForm">
+                <div class="cf-row">
+                    <div class="cf-group">
+                        <label class="cf-label" for="cf-name">Your Name</label>
+                        <input type="text" id="cf-name" class="cf-input" placeholder="Juan Dela Cruz" required>
+                    </div>
+                    <div class="cf-group">
+                        <label class="cf-label" for="cf-email">Email Address</label>
+                        <input type="email" id="cf-email" class="cf-input" placeholder="juan@email.com" required>
+                    </div>
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="cf-subject">Subject</label>
+                    <input type="text" id="cf-subject" class="cf-input" placeholder="e.g. Question about Hydra Facial">
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="cf-message">Your Message</label>
+                    <textarea id="cf-message" class="cf-textarea" placeholder="How can we help you?" required></textarea>
+                </div>
+                <button type="submit" class="cf-submit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    Send Message
+                </button>
+            </form>
+
+            <!-- Success message (shown after submit) -->
+            <div class="cf-success" id="cf-success">
+                <div class="cf-success-icon">✓</div>
+                <h3>Message Sent!</h3>
+                <p>Thank you for reaching out. We'll get back to you within 24 hours.</p>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="contact-info-panel fade-in">
+            <span class="ci-heading-label">Find Us</span>
+            <h2 class="ci-heading">Visit the<br>Sanctuary</h2>
+            <p class="ci-subtext">We're easy to find in Dalandanan, Valenzuela — right at G. Lazaro Road, corner Isabelo Fernando. Parking is available nearby.</p>
+
+            <!-- Map -->
+            <div class="ci-map">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3859.0710488567156!2d120.95705737433302!3d14.708574074425565!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b3002b08d243%3A0xc77328097553c99d!2sLet&#39;s%20G%20Aesthetic%20and%20Wellness%20Services!5e0!3m2!1sen!2sph!4v1779247804998!5m2!1sen!2sph"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+            <!-- Hours -->
+            <div style="margin-bottom: 8px;">
+                <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:3px;color:var(--brand-gold);">Clinic Hours</span>
+            </div>
+            <table class="hours-table">
+                <tr>
+                    <td>Monday – Sunday<span class="hours-open-badge">Open</span></td>
+                    <td>11:00 AM – 9:00 PM</td>
+                </tr>
+                <tr>
+                    <td>Holidays</td>
+                    <td>11:00 AM – 9:00 PM</td>
+                </tr>
+                <tr>
+                    <td>Last Booking</td>
+                    <td>8:00 PM</td>
+                </tr>
+            </table>
+
+            <!-- Social -->
+            <div style="margin-bottom: 14px;">
+                <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:3px;color:var(--brand-gold);">Follow Us</span>
+            </div>
+            <div class="ci-social-row">
+                <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" class="ci-social-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>
+                    Facebook
+                </a>
+                <a href="https://www.instagram.com/letsgaesthetic/?hl=en" target="_blank" class="ci-social-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.822a1.44 1.44 0 11-2.881 0 1.44 1.44 0 012.88 0z"/></svg>
+                    Instagram
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CTA BAND ── -->
+    <div class="contact-cta-band fade-in">
+        <div class="cta-band-left">
+            <h3>Skip the Wait — <em>Book Online</em></h3>
+            <p>Reserve your slot directly and get a confirmed appointment ID instantly.</p>
+        </div>
+        <div class="cta-band-right">
+            <button class="btn-primary" onclick="openBooking()" style="white-space:nowrap;">Book Your Session</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo-container" style="margin-bottom: 1rem;">
+                    <img src="images/global/lets-g-footer-variant.png" alt="Let's G" decoding="async" style="max-width: 150px;">
+                </div>
+                <p>Aesthetic & Wellness Services.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="index.html#faq" style="color: var(--brand-gold); font-weight: 600;">FAQ ↑</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Visit Us</h4>
+                <ul>
+                    <li>G. Lazaro Road, Cor Isabelo Fernando, Valenzuela, 1443</li>
+                    <li><a href="tel:+639541768840">(+63) 954 176 8840</a></li>
+                    <li><a href="mailto:letsgreservation@gmail.com">letsgreservation@gmail.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 28 28" width="32" height="32">
+                        <defs><linearGradient id="gold-grad-fb" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#AA771C"/><stop offset="30%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F3E5AB"/><stop offset="70%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8A5A19"/></linearGradient></defs>
+                        <path fill="url(#gold-grad-fb)" d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/letsgaesthetic/?hl=en" target="_blank" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                        <defs><linearGradient id="gold-grad-ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#AA771C"/><stop offset="30%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F3E5AB"/><stop offset="70%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8A5A19"/></linearGradient></defs>
+                        <path fill="url(#gold-grad-ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.822a1.44 1.44 0 11-2.881 0 1.44 1.44 0 012.88 0z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Let's G Aesthetic and Wellness Services. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+    // Override the default contact form submit to use the new form IDs
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('contactForm');
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name    = document.getElementById('cf-name').value;
+            const email   = document.getElementById('cf-email').value;
+            const message = document.getElementById('cf-message').value;
+            const submitBtn = form.querySelector('.cf-submit');
+
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            fetch('/database/api.php?route=contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, message })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    form.style.display = 'none';
+                    document.getElementById('cf-success').style.display = 'block';
+                } else {
+                    alert(data.message || 'Something went wrong. Please try again.');
+                    submitBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(() => {
+                alert('Server error. Please try again or contact support.');
+                submitBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
+                submitBtn.disabled = false;
+            });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workplace Admin | Let's G Aesthetic</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    
+    <!-- Existing Links -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="icon" type="image/x-icon" href="images/global/favicon.ico">
+
+    <!-- LG Notification Systems -->
+    <style>
+        /* ── Shared container (toast + admin alerts stack together) ── */
+        #lg-toast-container {
+            position: fixed; bottom: 28px; left: 28px; z-index: 99999;
+            display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none;
+        }
+        @media (max-width: 600px) {
+            #lg-toast-container {
+                left: 50%; transform: translateX(-50%); bottom: 24px;
+                width: calc(100vw - 32px); max-width: 420px; align-items: center;
+            }
+            .lg-toast, .lg-admin-alert {
+                width: 100%; min-width: unset !important; max-width: 100% !important;
+                box-sizing: border-box;
+            }
+        }
+
+        /* ── Toast (transient, slim) ── */
+        .lg-toast {
+            pointer-events: all; display: flex; align-items: flex-start; gap: 12px;
+            min-width: 300px; max-width: 380px; padding: 14px 18px;
+            background: #0e0e10; border: 1px solid #27272a;
+            border-left: 3px solid var(--brand-gold, #D4AF37);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,175,55,0.08);
+            font-family: 'Lato', sans-serif; font-size: 0.88rem; color: #f4f4f5;
+            line-height: 1.5; opacity: 0; transform: translateY(12px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            cursor: default; position: relative; overflow: hidden;
+        }
+        .lg-toast.lg-toast--error { border-left-color: #ef4444; }
+        .lg-toast.lg-toast--info  { border-left-color: #a1a1aa; }
+        .lg-toast.lg-toast--in  { opacity: 1; transform: translateY(0); }
+        .lg-toast.lg-toast--out { opacity: 0; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .lg-toast-icon { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; }
+        .lg-toast-icon--success { color: var(--brand-gold, #D4AF37); }
+        .lg-toast-icon--error   { color: #ef4444; }
+        .lg-toast-icon--info    { color: #a1a1aa; }
+        .lg-toast-body { flex: 1; }
+        .lg-toast-title { font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; }
+        .lg-toast-title--success { color: var(--brand-gold, #D4AF37); }
+        .lg-toast-title--error   { color: #ef4444; }
+        .lg-toast-title--info    { color: #a1a1aa; }
+        .lg-toast-message { color: #d4d4d8; font-size: 0.85rem; }
+        .lg-toast-close { flex-shrink: 0; background: none; border: none; color: #52525b; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; margin-left: 4px; transition: color 0.15s; }
+        .lg-toast-close:hover { color: #a1a1aa; }
+        .lg-toast-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--brand-gold, #D4AF37); opacity: 0.4; transition: width linear; }
+        .lg-toast.lg-toast--error .lg-toast-progress { background: #ef4444; }
+
+        /* ── Admin Alert (persistent, bolder, wider — dashboard style) ── */
+        .lg-admin-alert {
+            pointer-events: all;
+            min-width: 340px; max-width: 440px;
+            background: #111113;
+            border: 1px solid #2a2a2e;
+            border-left: 4px solid var(--brand-gold, #D4AF37);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.85), 0 0 0 1px rgba(212,175,55,0.06);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            opacity: 0; transform: translateY(14px);
+            transition: opacity 0.32s ease, transform 0.32s ease;
+        }
+        .lg-admin-alert.lg-aa--error  { border-left-color: #ef4444; }
+        .lg-admin-alert.lg-aa--info   { border-left-color: #4a90d9; }
+        .lg-admin-alert.lg-aa--in  { opacity: 1; transform: translateY(0); }
+        .lg-admin-alert.lg-aa--out { opacity: 0; transform: translateY(10px); transition: opacity 0.22s ease, transform 0.22s ease; }
+
+        .lg-aa-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 13px 14px 11px;
+            border-bottom: 1px solid #1e1e21;
+        }
+        .lg-aa-badge {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.62rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.6px;
+            flex: 1;
+        }
+        .lg-aa-badge svg { flex-shrink: 0; }
+        .lg-aa-badge--success { color: var(--brand-gold, #D4AF37); }
+        .lg-aa-badge--error   { color: #ef4444; }
+        .lg-aa-badge--info    { color: #4a90d9; }
+        .lg-aa-timestamp {
+            font-size: 0.68rem; color: #3f3f46;
+            font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        .lg-aa-dismiss {
+            background: none; border: none; color: #3f3f46; cursor: pointer;
+            font-size: 1.05rem; line-height: 1; padding: 0 0 0 8px;
+            transition: color 0.15s;
+        }
+        .lg-aa-dismiss:hover { color: #71717a; }
+
+        .lg-aa-body { padding: 12px 14px 14px; }
+        .lg-aa-message {
+            font-size: 0.875rem; color: #e4e4e7; line-height: 1.55;
+            font-weight: 400;
+        }
+        .lg-aa-message strong { color: #f4f4f5; font-weight: 600; }
+
+        .lg-aa-footer {
+            display: flex; justify-content: flex-end;
+            padding: 0 14px 12px;
+        }
+        .lg-aa-ok {
+            padding: 6px 16px;
+            background: transparent;
+            border: 1px solid #2a2a2e;
+            color: #71717a;
+            font-family: inherit; font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.1px;
+            cursor: pointer; transition: border-color 0.15s, color 0.15s;
+        }
+        .lg-admin-alert.lg-aa--success .lg-aa-ok:hover {
+            border-color: var(--brand-gold, #D4AF37); color: var(--brand-gold, #D4AF37);
+        }
+        .lg-admin-alert.lg-aa--error .lg-aa-ok:hover { border-color: #ef4444; color: #ef4444; }
+        .lg-admin-alert.lg-aa--info  .lg-aa-ok:hover { border-color: #4a90d9; color: #4a90d9; }
+    </style>
+    <script>
+        (function() {
+            /* ── shared container ── */
+            function _container() {
+                let c = document.getElementById('lg-toast-container');
+                if (!c) { c = document.createElement('div'); c.id = 'lg-toast-container'; document.body.appendChild(c); }
+                return c;
+            }
+
+            /* ── Toast system (unchanged) ── */
+            const _tIcons = {
+                success: `<svg class="lg-toast-icon lg-toast-icon--success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+                error:   `<svg class="lg-toast-icon lg-toast-icon--error"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+                info:    `<svg class="lg-toast-icon lg-toast-icon--info"    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+            };
+            const _tTitles = { success: 'Success', error: 'Error', info: 'Notice' };
+            window.showToast = function(message, type, duration) {
+                type = type || 'info'; duration = duration || 4500;
+                const toast = document.createElement('div');
+                toast.className = `lg-toast lg-toast--${type}`;
+                toast.innerHTML = `${_tIcons[type]||_tIcons.info}<div class="lg-toast-body"><div class="lg-toast-title lg-toast-title--${type}">${_tTitles[type]||'Notice'}</div><div class="lg-toast-message">${message}</div></div><button class="lg-toast-close" aria-label="Dismiss">&times;</button><div class="lg-toast-progress" style="width:100%;"></div>`;
+                _container().appendChild(toast);
+                requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('lg-toast--in'); }); });
+                const prog = toast.querySelector('.lg-toast-progress');
+                prog.style.transition = `width ${duration}ms linear`;
+                requestAnimationFrame(() => { requestAnimationFrame(() => { prog.style.width = '0%'; }); });
+                function dismiss() { toast.classList.remove('lg-toast--in'); toast.classList.add('lg-toast--out'); setTimeout(() => toast.remove(), 280); }
+                toast.querySelector('.lg-toast-close').addEventListener('click', dismiss);
+                const timer = setTimeout(dismiss, duration);
+                toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                toast.addEventListener('mouseleave', () => setTimeout(dismiss, 1200));
+            };
+
+            /* ── Admin Alert system ── */
+            const _aaIcons = {
+                success: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+                error:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+                info:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+            };
+            const _aaLabels  = { success: 'Confirmed', error: 'Action Required', info: 'Notice' };
+            const _aaOkLabel = { success: 'Got it', error: 'Dismiss', info: 'OK' };
+
+            window.showAdminAlert = function(message, type, autoDismiss) {
+                type = type || 'info';
+                const now = new Date();
+                const ts  = now.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+                const alert = document.createElement('div');
+                alert.className = `lg-admin-alert lg-aa--${type}`;
+                alert.innerHTML = `
+                    <div class="lg-aa-header">
+                        <div class="lg-aa-badge lg-aa-badge--${type}">
+                            ${_aaIcons[type]||_aaIcons.info}
+                            ${_aaLabels[type]||'Notice'}
+                        </div>
+                        <span class="lg-aa-timestamp">${ts}</span>
+                        <button class="lg-aa-dismiss" aria-label="Dismiss">&times;</button>
+                    </div>
+                    <div class="lg-aa-body">
+                        <div class="lg-aa-message">${message}</div>
+                    </div>
+                    <div class="lg-aa-footer">
+                        <button class="lg-aa-ok">${_aaOkLabel[type]||'OK'}</button>
+                    </div>`;
+
+                _container().appendChild(alert);
+                requestAnimationFrame(() => { requestAnimationFrame(() => { alert.classList.add('lg-aa--in'); }); });
+
+                function dismiss() {
+                    alert.classList.remove('lg-aa--in');
+                    alert.classList.add('lg-aa--out');
+                    setTimeout(() => alert.remove(), 240);
+                }
+                alert.querySelector('.lg-aa-dismiss').addEventListener('click', dismiss);
+                alert.querySelector('.lg-aa-ok').addEventListener('click', dismiss);
+                if (autoDismiss) setTimeout(dismiss, autoDismiss);
+            };
+        })();
+    </script>
+
+    <!-- CSS Override for Sans-Serif -->
+    <style>
+        body.admin-body,
+        .admin-sidebar,
+        .admin-workspace,
+        .panel,
+        .panel-header,
+        .kpi-label,
+        .kpi-value,
+        .nav-item {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        }
+
+        /* Ensure specific headers don't revert to serif */
+        .panel-header, .greeting {
+            font-weight: 600;
+        }
+
+        /* Appointment Modal */
+        .appointment-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s;
+        }
+
+        .appointment-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-alt);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-width: 900px;
+            width: 95%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s;
+        }
+        .appt-modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+        .appt-breakdown-panel {
+            background: rgba(212,175,55,0.04);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 6px;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+        }
+        .breakdown-title {
+            font-size: 0.7rem;
+            color: var(--brand-gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+        .breakdown-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.84rem;
+        }
+        .breakdown-line:last-of-type { border-bottom: none; }
+        .breakdown-line .bl-name { color: var(--text-main); flex: 1; line-height: 1.4; }
+        .breakdown-line .bl-price { color: var(--brand-gold); font-weight: 600; white-space: nowrap; }
+        .breakdown-total {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(212,175,55,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .breakdown-total .bt-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .breakdown-total .bt-value { font-size: 1.25rem; font-weight: 700; color: var(--brand-gold); }
+        .breakdown-empty { color: var(--text-muted); font-size: 0.84rem; font-style: italic; }
+        @media (max-width: 700px) { .appt-modal-body { grid-template-columns: 1fr; } }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--brand-gold);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-select option {
+            background-color: var(--bg-alt);
+            color: var(--text-main);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+
+        .btn-modal {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-modal:hover {
+            background-color: var(--bg-main);
+            border-color: var(--text-main);
+        }
+
+        .btn-modal-primary {
+            background-color: var(--brand-gold);
+            color: #000;
+            border-color: var(--brand-gold);
+        }
+
+        .btn-modal-primary:hover {
+            background-color: var(--brand-gold-hover);
+            border-color: var(--brand-gold-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.4); }
+        }
+
+        /* Sidebar Messages nav tab */
+        .nav-messages-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-messages-item .msg-badge {
+            position: static;
+            transform: none;
+            top: auto;
+            right: auto;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+        /* Messages button badge */
+        .btn-messages-wrap { position: relative; display: inline-flex; }
+        .msg-badge {
+            position: absolute; top: -7px; right: -7px;
+            background: #e74c3c; color: #fff;
+            font-size: 0.65rem; font-weight: 700;
+            border-radius: 999px; min-width: 18px; height: 18px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 4px; pointer-events: none;
+        }
+        .msg-badge.hidden { display: none; }
+
+        /* Messages modal */
+        .messages-modal {
+            display: none; position: fixed; z-index: 3000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); animation: fadeIn 0.3s;
+        }
+        .messages-modal.show { display: flex; align-items: center; justify-content: center; }
+        .messages-modal-content {
+            background: var(--bg-panel); border: 1px solid var(--border-color);
+            border-top: 3px solid var(--brand-gold); padding: 30px;
+            max-width: 620px; width: 95%; max-height: 80vh;
+            display: flex; flex-direction: column; animation: slideUp 0.3s;
+        }
+        .messages-modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .messages-modal-header h2 {
+            font-family: var(--font-heading); font-size: 1.3rem;
+            color: var(--text-main); margin: 0;
+        }
+        .messages-modal-header-actions { display: flex; align-items: center; gap: 12px; }
+        .btn-mark-all {
+            background: transparent; border: 1px solid var(--border-color);
+            color: var(--text-muted); font-size: 0.72rem;
+            text-transform: uppercase; letter-spacing: 1px;
+            padding: 6px 14px; cursor: pointer;
+            font-family: var(--font-body); transition: all 0.2s;
+        }
+        .btn-mark-all:hover { border-color: var(--brand-gold); color: var(--brand-gold); }
+        .messages-list { overflow-y: auto; flex: 1; }
+        .msg-item {
+            padding: 16px 10px; border-bottom: 1px solid var(--border-color);
+            cursor: pointer; transition: background 0.2s;
+        }
+        .msg-item:last-child { border-bottom: none; }
+        .msg-item:hover { background: var(--bg-hover); }
+        .msg-item.unread { border-left: 3px solid var(--brand-gold); padding-left: 12px; }
+        .msg-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .msg-sender-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+        .msg-sender-email { font-size: 0.75rem; color: var(--text-muted); margin-left: 8px; }
+        .msg-timestamp { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; }
+        .msg-body { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; margin-top: 4px; }
+        .msg-unread-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--brand-gold); margin-top: 5px; }
+        .msg-read-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-top: 5px; }
+        .msg-empty { color: var(--text-muted); font-size: 0.88rem; text-align: center; padding: 40px 0; }
+
+        /* ══════════════════════════════════════════════════════════════════
+           Full-page Messages View
+           Layout: sidebar(220px) | workspace(flex-col, pad 40px 50px)
+                   workspace has topbar (~104px) then messages-page fills rest
+           ══════════════════════════════════════════════════════════════════ */
+
+        /* Remove workspace padding when messages page is showing */
+        .admin-workspace.messages-open {
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+        /* Topbar stays visible with its own padding */
+        .admin-workspace.messages-open .admin-topbar {
+            padding: 20px 40px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .messages-page {
+            display: none;
+            flex-direction: column;
+            flex: 1;               /* fill remaining height after topbar */
+            min-height: 0;         /* critical: let flex child shrink below content */
+            overflow: hidden;
+        }
+        .messages-page.active { display: flex; }
+
+        .messages-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* ── Inbox panel ─────────────────────────────────────────────────── */
+        .inbox-panel {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .inbox-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .inbox-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        /* Independent scroll — only the list scrolls, header stays fixed */
+        .inbox-list {
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            scroll-behavior: smooth;
+        }
+        .inbox-list::-webkit-scrollbar { width: 4px; }
+        .inbox-list::-webkit-scrollbar-track { background: transparent; }
+        .inbox-list::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.25); border-radius: 2px; }
+        .inbox-list::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.5); }
+
+        .inbox-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 3px solid transparent;
+        }
+        .inbox-item:hover { background: rgba(255,255,255,0.03); }
+        .inbox-item.active { background: rgba(212,175,55,0.06); border-left-color: var(--brand-gold); }
+        .inbox-item.unread .inbox-sender { color: #fff; font-weight: 700; }
+        .inbox-sender { font-size: 0.875rem; color: var(--text-main); }
+        .inbox-preview {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .inbox-time { font-size: 0.69rem; color: var(--text-muted); white-space: nowrap; }
+        .inbox-item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px; }
+        .inbox-unread-dot {
+            width: 7px; height: 7px;
+            background: var(--brand-gold);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        /* ── Conversation panel ──────────────────────────────────────────── */
+        .conversation-panel {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .conv-header {
+            padding: 16px 28px 12px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .conv-client-name { font-size: 1rem; font-weight: 700; color: var(--text-main); }
+        .conv-client-email { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
+
+        .conv-empty {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Messages scroll area — fills all space between header and reply box */
+        .conv-messages {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 20px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            scroll-behavior: smooth;
+        }
+        .conv-messages::-webkit-scrollbar { width: 4px; }
+        .conv-messages::-webkit-scrollbar-track { background: transparent; }
+        .conv-messages::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 2px; }
+
+        .chat-bubble-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-bubble-wrap.from-client { align-items: flex-start; }
+        .chat-bubble-wrap.from-admin  { align-items: flex-end; }
+        .chat-label {
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        .chat-bubble {
+            max-width: 68%;
+            padding: 10px 15px;
+            font-size: 0.875rem;
+            line-height: 1.55;
+            border-radius: 2px;
+            word-break: break-word;
+        }
+        .chat-bubble.client {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+        .chat-bubble.admin {
+            background: var(--brand-gold);
+            color: #000;
+            font-weight: 500;
+        }
+        .chat-time { font-size: 0.66rem; color: var(--text-muted); margin-top: 5px; }
+
+        /* ── Reply box — pinned to bottom, never hidden ───────────────────── */
+        .reply-box {
+            border-top: 1px solid var(--border-color);
+            padding: 14px 28px 16px;
+            flex-shrink: 0;           /* never shrinks — always visible */
+            background: var(--bg-darkest, #0a0a0a);
+        }
+        .reply-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .reply-textarea {
+            flex: 1;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.875rem;
+            padding: 11px 14px;
+            resize: none;
+            height: 52px;
+            min-height: 52px;
+            max-height: 120px;
+            border-radius: 2px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, height 0.1s;
+            line-height: 1.5;
+        }
+        .reply-textarea:focus { outline: none; border-color: var(--brand-gold); }
+        .reply-textarea::placeholder { color: var(--text-muted); }
+        .btn-send {
+            background: var(--brand-gold);
+            color: #000;
+            border: none;
+            padding: 0 22px;
+            height: 52px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .btn-send:hover { background: var(--brand-gold-hover, #c9a227); }
+        .btn-send:disabled { opacity: 0.45; cursor: not-allowed; }
+
+        /* ── Media queries ───────────────────────────────────────────────── */
+        @media (max-width: 1100px) {
+            .messages-layout { grid-template-columns: 260px 1fr; }
+        }
+        @media (max-width: 860px) {
+            /* Full-page Messages View Adjustment */
+            .messages-layout {
+                grid-template-columns: 1fr !important;
+                grid-template-rows: 220px 1fr !important;
+                height: calc(100vh - 75px) !important;
+            }
+            .inbox-panel {
+                border-right: none !important;
+                border-bottom: 1px solid var(--border-color) !important;
+            }
+            .chat-bubble { max-width: 85% !important; }
+            .conv-messages { padding: 12px 15px !important; }
+            .reply-box { padding: 10px 15px 12px !important; }
+            
+            /* Workspace container optimization for mobile viewports */
+            .admin-workspace.messages-open {
+                height: auto !important;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Fix general modal sizing limits on small viewports */
+            .modal-content, .messages-modal-content {
+                padding: 24px 16px !important;
+                width: 95% !important;
+            }
+            .modal-header h2 {
+                font-size: 1.1rem !important;
+            }
+        }
+        @media (max-width: 600px) {
+            .messages-layout { grid-template-rows: 220px 1fr; }
+            .inbox-item { padding: 12px 14px; }
+            .conv-header { padding: 12px 18px 10px; }
+            .admin-workspace.messages-open .admin-topbar {
+                padding: 14px 18px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .btn-send { padding: 0 14px; font-size: 0.7rem; letter-spacing: 1px; }
+        }
+
+        /* Reset confirmation modal */
+        .reset-modal {
+            display: none; position: fixed; z-index: 4000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); animation: fadeIn 0.2s;
+        }
+        .reset-modal.show { display: flex; align-items: center; justify-content: center; }
+        .reset-modal-content {
+            background: var(--bg-panel); border: 1px solid #e74c3c;
+            border-top: 3px solid #e74c3c; padding: 35px 30px;
+            max-width: 420px; width: 90%; animation: slideUp 0.25s; text-align: center;
+        }
+        .reset-modal-icon { font-size: 2.2rem; color: #e74c3c; margin-bottom: 14px; }
+        .reset-modal-content h2 {
+            font-family: var(--font-heading); font-size: 1.4rem;
+            color: var(--text-main); margin-bottom: 10px;
+        }
+        .reset-modal-content p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 28px; }
+        .reset-modal-actions { display: flex; gap: 12px; justify-content: center; }
+        .btn-reset-confirm {
+            background: #e74c3c; color: #fff; border: 1px solid #e74c3c;
+            padding: 10px 24px; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 2px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; font-family: var(--font-body);
+        }
+        .btn-reset-confirm:hover { background: #c0392b; border-color: #c0392b; }
+    </style>
+</head>
+<body class="admin-body">
+
+    <script>
+        // Auth guard — redirect to login if not verified
+        (function() {
+            const verified = sessionStorage.getItem('lg_admin_verified');
+            if (!verified) {
+                window.location.replace('admin-login.html');
+            }
+        })();
+    </script>
+
+    <div class="admin-sidebar">
+        <div class="login-logo"><img src="images/global/lets-g-gold.png" alt="Let's G Aesthetics" decoding="async"></div>
+        <div class="nav-item active" id="nav-dashboard" onclick="showDashboard()">Dashboard</div>
+        <div class="nav-item nav-messages-item" id="nav-messages" onclick="showMessages()">
+            Messages
+            <span class="msg-badge hidden" id="msg-badge-sidebar">0</span>
+        </div>
+    </div>
+
+    <div class="admin-workspace">
+        <div class="admin-topbar">
+            <div class="greeting">Overview</div>
+            <div class="header-actions">
+                <span id="live-indicator" style="display:inline-flex;align-items:center;gap:6px;font-size:0.72rem;color:#2ecc71;text-transform:uppercase;letter-spacing:1.5px;opacity:0.85;">
+                    <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#2ecc71;animation:livePulse 2s infinite;"></span>Live
+                </span>
+                <button class="btn" onclick="refreshAllData()">Refresh Data</button>
+                <button class="btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="openResetModal()">Reset Data</button>
+                <button class="btn btn-gold" onclick="openManageBookingsModal()">Manage Bookings</button>
+                
+                <a href="index.html" class="btn" style="border-color: var(--text-muted); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center;">Exit Portal</a>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" style="display:block;">
+        <div class="dashboard-grid">
+            <!-- Panels injected by JS on DOMContentLoaded -->
+        </div>
+        </div><!-- /#dashboard-page -->
+
+        <!-- Messages Page -->
+        <div id="messages-page" class="messages-page">
+            <div class="messages-layout">
+                <div class="inbox-panel">
+                    <div class="inbox-header">
+                        <span class="inbox-title">Inbox</span>
+                        <button class="btn-mark-all" onclick="markAllMessagesRead()">Mark all read</button>
+                    </div>
+                    <div class="inbox-list" id="inbox-list">
+                        <div class="msg-empty">Loading...</div>
+                    </div>
+                </div>
+                <div class="conversation-panel">
+                    <div id="conv-header" class="conv-header" style="display:none;">
+                        <div class="conv-client-name" id="conv-name"></div>
+                        <div class="conv-client-email" id="conv-email"></div>
+                    </div>
+                    <div id="conv-empty" class="conv-empty">Select a message to view the conversation.</div>
+                    <div id="conv-messages" class="conv-messages" style="display:none;"></div>
+                    <div id="reply-box" class="reply-box" style="display:none;">
+                        <div class="reply-row">
+                            <textarea class="reply-textarea" id="reply-textarea" placeholder="Type your reply..." onkeydown="handleReplyKey(event)"></textarea>
+                            <button class="btn-send" id="btn-send" onclick="sendReply()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /#messages-page -->
+
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="appointment-modal" id="appointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Appointment</h2>
+                <button class="close-modal" onclick="closeAppointmentModal()">&times;</button>
+            </div>
+            <form id="appointmentForm" onsubmit="saveAppointment(event)">
+                <div class="appt-modal-body">
+                    <!-- LEFT: appointment details -->
+                    <div class="appt-modal-left">
+                        <div class="form-group">
+                            <label class="form-label">Appointment ID</label>
+                            <input type="text" class="form-input" id="apptId" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Customer Name</label>
+                            <input type="text" class="form-input" id="apptCustomer" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-input" id="apptPhone" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <input type="text" class="form-input" id="apptCategory" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Service</label>
+                            <input type="text" class="form-input" id="apptService" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date &amp; Time</label>
+                            <input type="text" class="form-input" id="apptDate" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="apptStatus" required>
+                                <option value="">Select Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="No-Show">No-Show</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Special Requests / Notes from Client</label>
+                            <textarea class="form-input" id="apptSpecialRequest" rows="3" readonly style="opacity:.8;resize:none;cursor:default;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Staff Notes (editable)</label>
+                            <textarea class="form-input" id="apptNotes" rows="2" placeholder="Internal staff notes..."></textarea>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-modal" onclick="closeAppointmentModal()">Cancel</button>
+                            <button type="submit" class="btn-modal btn-modal-primary">Save Changes</button>
+                        </div>
+                    </div>
+                    <!-- RIGHT: price breakdown -->
+                    <div class="appt-breakdown-panel">
+                        <div class="breakdown-title">Price Breakdown</div>
+                        <div id="apptBreakdownLines"><span class="breakdown-empty">No breakdown available.</span></div>
+                        <div class="breakdown-total">
+                            <span class="bt-label">Est. Total</span>
+                            <span class="bt-value" id="apptBreakdownTotal">₱0</span>
+                        </div>
+                        <input type="hidden" id="apptPrice">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Reset Confirmation Modal -->
+    <div class="reset-modal" id="resetModal">
+        <div class="reset-modal-content">
+            <div class="reset-modal-icon">&#9888;</div>
+            <h2>Reset All Data?</h2>
+            <p>This will permanently delete all appointments, contact messages, and Sanctuary Club entries from the database. This action cannot be undone.</p>
+            <div class="reset-modal-actions">
+                <button class="btn" onclick="closeResetModal()">Cancel</button>
+                <button class="btn-reset-confirm" onclick="confirmResetData()">Yes, Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let statusChartInstance = null;
+        let calendarInstance = null;
+        const API_BASE = '/database/api.php';
+        let appointmentsData = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const dashboardGrid = document.querySelector('.dashboard-grid');
+
+            // Create dashboard grid content
+            dashboardGrid.innerHTML = `
+                <div class="panel">
+                    <div class="panel-header">Live Appointments</div>
+                    <ul class="recent-list" id="recent-list">
+                        <li class="recent-item" style="color: var(--text-muted); justify-content: center; border:none;">Loading data...</li>
+                    </ul>
+                </div>
+
+                <div class="panel panel-calendar">
+                    <div class="panel-header">Agenda</div>
+                    <div id="calendar"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">Key Metrics</div>
+                    <div class="kpi-container">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Total Appointments</div>
+                            <div class="kpi-value" id="kpi-bookings">0</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Est. Revenue</div>
+                            <div class="kpi-value" id="kpi-revenue" style="color: var(--brand-gold);">₱0</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Pending</div>
+                            <div class="kpi-value" id="kpi-pending" style="color:#f59e0b;">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">Revenue Over Time</div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">Status Breakdown</div>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            const calendarEl = document.getElementById('calendar');
+            calendarInstance = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridDay',
+                slotMinTime: '09:00:00',
+                slotMaxTime: '21:00:00',
+                allDaySlot: false,
+                headerToolbar: { left: 'prev,next', center: 'title', right: 'timeGridDay,timeGridWeek' },
+                events: `${API_BASE}?route=admin/calendar`
+            });
+            calendarInstance.render();
+            fetchStatsData();
+            fetchMessages();
+
+            // ── Live Auto-Refresh (every 15 seconds) ─────────────────────────
+            setInterval(() => {
+                fetchStatsData();
+                fetchMessages();
+                if (calendarInstance) calendarInstance.refetchEvents();
+            }, 5000);
+        });
+
+        async function fetchStatsData() {
+            try {
+                const response = await fetch(`${API_BASE}?route=admin/stats`);
+                const result = await response.json();
+                if (result.status === 'success') updateDashboard(result.data);
+            } catch (error) {
+                console.error("Connection error:", error);
+            }
+        }
+
+        async function fetchMessages() {
+            try {
+                const response = await fetch(`${API_BASE}?route=admin/messages`);
+                const result = await response.json();
+                if (result.status === 'success') displayMessages(result.data);
+            } catch (error) {
+                console.error("Connection error:", error);
+            }
+        }
+
+        function displayMessages(messages) {
+            const prevData = window._messagesData || [];
+            window._messagesData = messages || [];
+            updateMsgBadge();
+
+            // Re-render inbox if messages page is visible
+            const messagesPage = document.getElementById('messages-page');
+            if (messagesPage && messagesPage.classList.contains('active')) {
+                // Always re-render inbox (preview text and unread state may have changed)
+                renderInbox();
+                // If a thread is open, silently refresh its conversation
+                if (_activeThreadEmail) {
+                    loadThreadConversation(_activeThreadEmail);
+                }
+            }
+        }
+
+        async function markMessageRead(id) {
+            try {
+                await fetch(`${API_BASE}?route=admin/mark-message-read`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+            } catch(e) {}
+        }
+
+        let revenueChartInstance = null;
+
+        function updateDashboard(data) {
+            document.getElementById('kpi-bookings').innerText = data.total_bookings || 0;
+            const revenue = parseFloat(data.total_revenue) || 0;
+            document.getElementById('kpi-revenue').innerText = '₱' + revenue.toLocaleString('en-PH', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+
+            const pending = (data.statuses && data.statuses.Pending) ? data.statuses.Pending : 0;
+            const pendingEl = document.getElementById('kpi-pending');
+            if (pendingEl) pendingEl.innerText = pending;
+
+            // Revenue line chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                const history = data.revenue_history || [];
+                const labels = history.length > 0 ? history.map(h => {
+                    const d = new Date(h.date);
+                    return d.toLocaleDateString('en-PH', {month:'short', day:'numeric'});
+                }) : ['No Data'];
+                const values = history.length > 0 ? history.map(h => parseFloat(h.revenue)) : [0];
+                if (revenueChartInstance) revenueChartInstance.destroy();
+                revenueChartInstance = new Chart(revenueCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Revenue (₱)',
+                            data: values,
+                            borderColor: '#D4AF37',
+                            backgroundColor: 'rgba(212,175,55,0.10)',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#D4AF37',
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.35,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => '₱' + ctx.parsed.y.toLocaleString('en-PH')
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: '#a1a1aa', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            y: { ticks: { color: '#a1a1aa', callback: v => '₱'+v.toLocaleString(), font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            const listContainer = document.getElementById('recent-list');
+            listContainer.innerHTML = '';
+
+            if (data.recent_appointments && data.recent_appointments.length > 0) {
+                data.recent_appointments.forEach(appt => {
+                    appointmentsData[appt.appointment_id] = appt;
+                    let colorHex = 'var(--brand-gold)';
+                    if (appt.status === 'Completed') colorHex = 'var(--status-completed)';
+                    if (appt.status === 'Cancelled' || appt.status === 'No-Show') colorHex = 'var(--status-cancelled)';
+
+                    listContainer.innerHTML += `
+                    <li class="recent-item" onclick="editAppointment('${appt.appointment_id}')" style="cursor: pointer;">
+                        <div class="status-line" style="background-color: ${colorHex};"></div>
+                        <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="color: var(--text-main); font-weight: 700; font-size: 0.95rem;">${appt.service_name}</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px;">${appt.customer_name}</div>
+                            </div>
+                            <div style="color: var(--brand-gold); font-size: 0.75rem; font-family: sans-serif; font-style: italic;">${appt.appointment_id}</div>
+                        </div>
+                    </li>`;
+                });
+            } else {
+                listContainer.innerHTML = '<li class="recent-item" style="color: var(--text-muted); justify-content: center; border:none;">No appointments</li>';
+            }
+
+            const ctx = document.getElementById('statusChart');
+            if (ctx) {
+                const ctxContext = ctx.getContext('2d');
+                if (statusChartInstance) statusChartInstance.destroy();
+                statusChartInstance = new Chart(ctxContext, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(data.statuses),
+                        datasets: [{
+                            data: Object.values(data.statuses),
+                            backgroundColor: ['#D4AF37', '#2ecc71', '#e74c3c', '#555555'],
+                            borderWidth: 1,
+                            borderColor: '#141414',
+                            cutout: '80%'
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#a1a1aa', usePointStyle: true } } } }
+                });
+            }
+        }
+
+        function refreshAllData() {
+            fetchStatsData();
+            fetchMessages();
+            if (calendarInstance) calendarInstance.refetchEvents();
+        }
+
+        function openManageBookingsModal() {
+            showAdminAlert('Click on any appointment in the <strong>Live Appointments</strong> list to edit it.', 'info');
+        }
+
+        function editAppointment(appointmentId) {
+            const appt = appointmentsData[appointmentId];
+            if (!appt) {
+                showAdminAlert('Appointment not found.', 'error');
+                return;
+            }
+            document.getElementById('apptId').value = appt.appointment_id;
+            document.getElementById('apptCustomer').value = appt.customer_name;
+            document.getElementById('apptPhone').value = appt.customer_phone || '—';
+            document.getElementById('apptCategory').value = appt.service_category || '—';
+            document.getElementById('apptService').value = appt.service_name;
+            document.getElementById('apptDate').value = appt.booking_date ? new Date(appt.booking_date.replace(' ','T')).toLocaleString('en-PH', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '—';
+            document.getElementById('apptSpecialRequest').value = (appt.special_request && appt.special_request !== 'None') ? appt.special_request : 'No special requests.';
+            document.getElementById('apptStatus').value = appt.status;
+            document.getElementById('apptNotes').value = appt.notes || '';
+
+            // Build price breakdown panel
+            const addons = (() => { try { return JSON.parse(appt.addons || '[]') || []; } catch(e) { return []; } })();
+            const basePrice = lookupServicePrice(appt.service_name) || (parseFloat(appt.price) || 0);
+            let totalPrice = basePrice;
+            let linesHtml = '';
+            if (basePrice > 0) {
+                linesHtml += `<div class="breakdown-line"><span class="bl-name">${appt.service_name}</span><span class="bl-price">₱${basePrice.toLocaleString('en-PH')}</span></div>`;
+            }
+            addons.forEach(addonName => {
+                const ap = lookupServicePrice(addonName);
+                if (ap > 0) {
+                    totalPrice += ap;
+                    linesHtml += `<div class="breakdown-line"><span class="bl-name">${addonName}</span><span class="bl-price">₱${ap.toLocaleString('en-PH')}</span></div>`;
+                }
+            });
+            // Fallback: if no breakdown lines resolved, use stored price
+            if (!linesHtml) {
+                const storedPrice = parseFloat(appt.price) || 0;
+                totalPrice = storedPrice;
+                if (storedPrice > 0) {
+                    linesHtml = `<div class="breakdown-line"><span class="bl-name">${appt.service_name}</span><span class="bl-price">₱${storedPrice.toLocaleString('en-PH')}</span></div>`;
+                } else {
+                    linesHtml = '<span class="breakdown-empty">No pricing data available.</span>';
+                }
+            }
+            document.getElementById('apptBreakdownLines').innerHTML = linesHtml;
+            document.getElementById('apptBreakdownTotal').textContent = '₱' + totalPrice.toLocaleString('en-PH');
+            document.getElementById('apptPrice')._numericPrice = totalPrice;
+            document.getElementById('appointmentModal').classList.add('show');
+        }
+
+        function closeAppointmentModal() {
+            document.getElementById('appointmentModal').classList.remove('show');
+        }
+
+        function saveAppointment(event) {
+            event.preventDefault();
+            const appointmentId = document.getElementById('apptId').value;
+            const status = document.getElementById('apptStatus').value;
+            const notes = document.getElementById('apptNotes').value;
+            const price = document.getElementById('apptPrice')._numericPrice || lookupServicePrice(document.getElementById('apptService').value) || 0;
+
+            fetch(`${API_BASE}?route=admin/update-appointment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    appointment_id: appointmentId,
+                    status: status,
+                    notes: notes,
+                    price: price
+                })
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    showAdminAlert('Appointment updated successfully!', 'success');
+                    closeAppointmentModal();
+                    refreshAllData();
+                } else {
+                    showAdminAlert('Error updating appointment: ' + result.message, 'error');
+                }
+            })
+            .catch(err => showAdminAlert('Connection error: ' + err.message, 'error'));
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('appointmentModal');
+            if (event.target === modal) {
+                closeAppointmentModal();
+            }
+        });
+
+        // ── Messages Full Page ───────────────────────────────────────────────
+        let _activeMessageId = null;
+        let _activeThreadEmail = null;
+        let _replyPollTimer = null;
+        const _workspace = () => document.querySelector('.admin-workspace');
+
+        function showMessages() {
+            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('messages-page').classList.add('active');
+            document.getElementById('nav-dashboard').classList.remove('active');
+            document.getElementById('nav-messages').classList.add('active');
+            document.querySelector('.greeting').textContent = 'Messages';
+            document.querySelector('.header-actions').style.display = 'none';
+            _workspace().classList.add('messages-open');
+            renderInbox();
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboard-page').style.display = 'block';
+            document.getElementById('messages-page').classList.remove('active');
+            document.getElementById('nav-dashboard').classList.add('active');
+            document.getElementById('nav-messages').classList.remove('active');
+            document.querySelector('.greeting').textContent = 'Overview';
+            document.querySelector('.header-actions').style.display = '';
+            _workspace().classList.remove('messages-open');
+            clearInterval(_replyPollTimer);
+            _activeThreadEmail = null;
+            _activeMessageId = null;
+        }
+
+        function _backToDashboard() {
+            document.getElementById('dashboard-page').style.display = 'block';
+            document.getElementById('messages-page').classList.remove('active');
+            document.getElementById('nav-messages').classList.remove('active');
+            document.getElementById('nav-dashboard').classList.add('active');
+            document.querySelector('.greeting').textContent = 'Overview';
+            document.querySelector('.header-actions').style.display = '';
+            _workspace().classList.remove('messages-open');
+            clearInterval(_replyPollTimer);
+        }
+
+        function renderInbox() {
+            const list = document.getElementById('inbox-list');
+            if (!window._messagesData || window._messagesData.length === 0) {
+                list.innerHTML = '<div class="msg-empty">No messages yet.</div>';
+                return;
+            }
+
+            // Group messages by sender email → one entry per contact
+            const convMap = new Map();
+            window._messagesData.forEach(msg => {
+                const key = (msg.email || '').toLowerCase().trim();
+                if (!convMap.has(key)) {
+                    convMap.set(key, { leadId: msg.id, name: msg.name, email: msg.email, msgs: [] });
+                }
+                convMap.get(key).msgs.push(msg);
+            });
+
+            // Sort converstions: most recent activity first
+            const convs = Array.from(convMap.values()).sort((a, b) => {
+                const tA = a.msgs.reduce((mx, m) => { const t = m.latest_reply_at || m.created_at || ''; return t > mx ? t : mx; }, '');
+                const tB = b.msgs.reduce((mx, m) => { const t = m.latest_reply_at || m.created_at || ''; return t > mx ? t : mx; }, '');
+                return tB.localeCompare(tA);
+            });
+
+            list.innerHTML = convs.map(conv => {
+                // Most recently active message
+                let latest = conv.msgs[0];
+                conv.msgs.forEach(m => {
+                    const tA = m.latest_reply_at || m.created_at || '';
+                    const tB = latest.latest_reply_at || latest.created_at || '';
+                    if (tA > tB) latest = m;
+                });
+
+                // Preview = latest reply body OR the latest original message
+                const previewText = latest.latest_reply_body
+                    ? (latest.latest_reply_sender === 'admin' ? 'You: ' : '') + latest.latest_reply_body
+                    : latest.message;
+
+                // Subject: show the most recent subject that exists
+                const withSubject = conv.msgs.slice().reverse().find(m => m.subject && m.subject.trim());
+                const subject = withSubject ? withSubject.subject.trim() : '';
+
+                const hasUnread = conv.msgs.some(m => !m.status || m.status === 'Unread');
+                const ts = latest.latest_reply_at || latest.created_at;
+                const date = ts ? new Date(ts.replace(' ','T')).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+                const isActive = _activeThreadEmail === (conv.email||'').toLowerCase().trim();
+                const emailKey = (conv.email || '').toLowerCase().trim();
+
+                return `<div class="inbox-item${hasUnread ? ' unread' : ''}${isActive ? ' active' : ''}" id="inbox-thread-${conv.leadId}" onclick="openThread('${emailKey}')">
+                    <div class="inbox-item-top">
+                        <span class="inbox-sender">${escHtml(conv.name)}</span>
+                        <span class="inbox-time">${date}</span>
+                    </div>
+                    ${subject ? `<div class="inbox-preview" style="font-weight:600;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(subject)}</div>` : ''}
+                    <div class="inbox-preview" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(previewText)}</div>
+                    ${hasUnread ? '<div style="display:flex;align-items:center;gap:6px;margin-top:5px;"><div class="inbox-unread-dot"></div><span style="font-size:0.68rem;color:var(--brand-gold);text-transform:uppercase;letter-spacing:1px;">Unread</span></div>' : ''}
+                </div>`;
+            }).join('');
+        }
+
+        // Open a conversation by email — shows all messages from that contact as one continuous chat
+        async function openThread(emailKey) {
+            if (!window._messagesData) return;
+            const convMsgs = window._messagesData.filter(m => (m.email||'').toLowerCase().trim() === emailKey);
+            if (!convMsgs.length) return;
+
+            _activeThreadEmail = emailKey;
+            // Use id of the first (oldest) message as the reply target
+            const oldest = convMsgs.reduce((a, b) => (a.created_at||'') < (b.created_at||'') ? a : b);
+            _activeMessageId = oldest.id;
+
+            // Mark active in inbox
+            document.querySelectorAll('.inbox-item').forEach(el => el.classList.remove('active'));
+            const threadEl = document.querySelector(`#inbox-thread-${convMsgs[0].id}, [onclick="openThread('${emailKey}')"]`);
+            if (threadEl) threadEl.classList.add('active');
+
+            // Mark all unread as read
+            for (const m of convMsgs) {
+                if (!m.status || m.status === 'Unread') {
+                    m.status = 'Read';
+                    markMessageRead(m.id);
+                }
+            }
+            updateMsgBadge();
+
+            // Conversation header: name + email, subject on second line if present
+            const withSubject = convMsgs.slice().sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||'')).find(m => m.subject && m.subject.trim());
+            const subject = withSubject ? withSubject.subject.trim() : '';
+
+            document.getElementById('conv-header').style.display = 'block';
+            document.getElementById('conv-name').textContent = oldest.name;
+            document.getElementById('conv-email').textContent = oldest.email + (subject ? '  ·  ' + subject : '');
+            document.getElementById('conv-empty').style.display = 'none';
+            document.getElementById('conv-messages').style.display = 'flex';
+            document.getElementById('reply-box').style.display = 'block';
+            document.getElementById('reply-textarea').value = '';
+            document.getElementById('reply-textarea').style.height = '52px';
+
+            await loadThreadConversation(emailKey);
+
+            clearInterval(_replyPollTimer);
+            _replyPollTimer = setInterval(() => {
+                if (_activeThreadEmail === emailKey) loadThreadConversation(emailKey);
+            }, 5000);
+
+            document.getElementById('reply-textarea').focus();
+        }
+
+        async function loadThreadConversation(emailKey) {
+            if (!window._messagesData) return;
+            const convMsgs = window._messagesData.filter(m => (m.email||'').toLowerCase().trim() === emailKey);
+            if (!convMsgs.length) return;
+
+            // Fetch replies for every message from this contact and merge into one timeline
+            const allReplies = [];
+            for (const m of convMsgs) {
+                try {
+                    const res = await fetch(`${API_BASE}?route=admin/replies&message_id=${m.id}&_t=${Date.now()}`);
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        data.data.forEach(r => allReplies.push(r));
+                    }
+                } catch(e) {}
+            }
+            allReplies.sort((a,b) => (a.sent_at||'').localeCompare(b.sent_at||''));
+            renderThreadConversation(convMsgs, allReplies);
+        }
+
+        function renderThreadConversation(convMsgs, allReplies) {
+            const container = document.getElementById('conv-messages');
+            const wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
+            const fmtTime = ts => ts ? new Date(ts.replace(' ','T')).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+
+            // Sort original messages oldest-first
+            const sorted = [...convMsgs].sort((a,b) => (a.created_at||'').localeCompare(b.created_at||''));
+            const clientName = sorted[0] ? sorted[0].name : '';
+
+            // Build unified timeline: original contact messages + all replies, by timestamp
+            const events = [];
+            // Track original message texts+timestamps to avoid duplicating them if also stored as replies
+            const originalKeys = new Set();
+            sorted.forEach(m => {
+                const key = (m.message||'').trim() + '|' + (m.created_at||'');
+                originalKeys.add(key);
+                events.push({
+                    from: 'client',
+                    text: m.message,
+                    ts: m.created_at,
+                    subject: (m.subject && m.subject.trim()) ? m.subject.trim() : null
+                });
+            });
+            allReplies.forEach(r => {
+                // Skip client replies that are duplicates of original messages (same body+timestamp)
+                const key = (r.body||'').trim() + '|' + (r.sent_at||'');
+                if (r.sender !== 'admin' && originalKeys.has(key)) return;
+                events.push({
+                    from: r.sender === 'admin' ? 'admin' : 'client',
+                    text: r.body,
+                    ts: r.sent_at,
+                    subject: null
+                });
+            });
+            events.sort((a,b) => (a.ts||'').localeCompare(b.ts||''));
+
+            let html = '';
+            events.forEach(ev => {
+                const isAdmin = ev.from === 'admin';
+                html += `<div class="chat-bubble-wrap ${isAdmin ? 'from-admin' : 'from-client'}">
+                    <div class="chat-label">${isAdmin ? 'YOU (ADMIN)' : escHtml(clientName).toUpperCase()}</div>
+                    ${ev.subject ? `<div style="font-size:0.69rem;color:var(--brand-gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">${escHtml(ev.subject)}</div>` : ''}
+                    <div class="chat-bubble ${isAdmin ? 'admin' : 'client'}">${escHtml(ev.text)}</div>
+                    <div class="chat-time">${fmtTime(ev.ts)}</div>
+                </div>`;
+            });
+
+            container.innerHTML = html || '<div style="color:var(--text-muted);text-align:center;padding:20px 0;">No messages yet.</div>';
+            if (wasAtBottom || events.length === 0) container.scrollTop = container.scrollHeight;
+        }
+
+        async function openConversation(id) {
+            _activeMessageId = id;
+            // Mark active in inbox
+            document.querySelectorAll('.inbox-item').forEach(el => el.classList.remove('active'));
+            const itemEl = document.getElementById('inbox-item-' + id);
+            if (itemEl) itemEl.classList.add('active');
+
+            const msg = window._messagesData && window._messagesData.find(m => String(m.id) === String(id));
+            if (!msg) return;
+
+            // Mark as read
+            if (!msg.status || msg.status === 'Unread') {
+                msg.status = 'Read';
+                if (itemEl) {
+                    const dot = itemEl.querySelector('.inbox-unread-dot');
+                    if (dot) dot.parentElement.remove();
+                    itemEl.classList.remove('unread');
+                }
+                markMessageRead(id);
+                updateMsgBadge();
+            }
+
+            // Show header
+            document.getElementById('conv-header').style.display = 'block';
+            document.getElementById('conv-name').textContent = msg.name;
+            document.getElementById('conv-email').textContent = msg.email;
+            document.getElementById('conv-empty').style.display = 'none';
+            document.getElementById('conv-messages').style.display = 'flex';
+            document.getElementById('reply-box').style.display = 'block';
+            document.getElementById('reply-textarea').value = '';
+            document.getElementById('reply-textarea').style.height = '52px';
+
+            await loadConversation(id, msg);
+
+            clearInterval(_replyPollTimer);
+            _replyPollTimer = setInterval(() => {
+                if (_activeMessageId === id) loadConversation(id, msg);
+            }, 5000);
+
+            // Focus reply box
+            document.getElementById('reply-textarea').focus();
+        }
+
+        async function loadConversation(id, msg) {
+            try {
+                const res = await fetch(`${API_BASE}?route=admin/replies&message_id=${id}&_t=${Date.now()}`);
+                const data = await res.json();
+                const replies = (data.status === 'success') ? data.data : [];
+                renderConversation(msg, replies);
+            } catch(e) {
+                renderConversation(msg, []);
+            }
+        }
+
+        function renderConversation(msg, replies) {
+            const container = document.getElementById('conv-messages');
+            const wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
+            const fmtTime = (ts) => ts ? new Date(ts.replace(' ','T')).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+
+            let html = `<div class="chat-bubble-wrap from-client">
+                <div class="chat-label">${escHtml(msg.name).toUpperCase()}</div>
+                <div class="chat-bubble client">${escHtml(msg.message)}</div>
+                <div class="chat-time">${fmtTime(msg.created_at)}</div>
+            </div>`;
+
+            replies.forEach(r => {
+                const isAdmin = r.sender === 'admin';
+                html += `<div class="chat-bubble-wrap ${isAdmin ? 'from-admin' : 'from-client'}">
+                    <div class="chat-label">${isAdmin ? 'YOU (ADMIN)' : escHtml(msg.name).toUpperCase()}</div>
+                    <div class="chat-bubble ${isAdmin ? 'admin' : 'client'}">${escHtml(r.body)}</div>
+                    <div class="chat-time">${fmtTime(r.sent_at)}</div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            // Auto-scroll only if user was near bottom (don't hijack manual scrolling)
+            if (wasAtBottom || replies.length === 0) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function escHtml(str) {
+            return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // Ctrl+Enter or Cmd+Enter to send; Enter alone just adds newline
+        function handleReplyKey(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                sendReply();
+                return;
+            }
+            // Auto-grow textarea (up to max-height)
+            const ta = e.target;
+            ta.style.height = '52px';
+            ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+        }
+
+        async function sendReply() {
+            const btn = document.getElementById('btn-send');
+            const textarea = document.getElementById('reply-textarea');
+            const replyBody = textarea.value.trim();
+            if (!replyBody || !_activeMessageId) return;
+
+            const msg = window._messagesData && window._messagesData.find(m => String(m.id) === String(_activeMessageId));
+            if (!msg) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            try {
+                const res = await fetch(`${API_BASE}?route=admin/reply`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message_id: _activeMessageId,
+                        body: replyBody,
+                        client_email: msg.email,
+                        client_name: msg.name
+                    })
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    textarea.value = '';
+                    textarea.style.height = '52px';
+                    if (_activeThreadEmail) { await loadThreadConversation(_activeThreadEmail); } else { await loadConversation(_activeMessageId, msg); }
+                } else {
+                    showAdminAlert('Failed to send reply: ' + (result.message || 'Unknown error'), 'error');
+                }
+            } catch(err) {
+                showAdminAlert('Connection error: ' + err.message, 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Send';
+        }
+
+        function markAllMessagesRead() {
+            if (!window._messagesData) return;
+            window._messagesData.forEach(msg => {
+                if (!msg.status || msg.status === 'Unread') {
+                    msg.status = 'Read';
+                    markMessageRead(msg.id);
+                }
+            });
+            renderInbox();
+            updateMsgBadge();
+        }
+
+        function updateMsgBadge() {
+            const unread = (window._messagesData || []).filter(m => !m.status || m.status === 'Unread').length;
+            const badge = document.getElementById('msg-badge-sidebar');
+            if (badge) {
+                badge.textContent = unread;
+                badge.classList.toggle('hidden', unread === 0);
+            }
+        }
+
+
+        // ── Service price map (mirrors api.php) ──────────────────────────────
+        const SERVICE_PRICES = {
+            'Glowing Facial':1000,'Acne Peel Facial':1200,'Melasma Facial':3000,
+            'Ageless Facial':1500,'Contour Facial':1700,'Exilis Facial':1500,
+            'Diamond Peel Facial':450,'Galvanic Facial':650,'Hydra Facial':800,
+            'Swedish':400,'Deep Tissue':700,'Back Massage':250,'Combi Massage':500,
+            'Foot Massage':300,'Bodyscrub':600,'Swedish + Ventosa (1hr)':600,
+            'Swedish + Hotstone (1hr)':550,'Deep Tissue + Ventosa (1hr)':800,
+            'Deep Tissue + Hotstone (1hr)':850,'Signature Massage (1.5hr)':600,
+            'Full Body + Hotstone (2hrs)':900,'Add-on: Ventosa':200,
+            'Add-on: Hotstone':150,'Add-on: Ear Candling':150,
+            'Regular Footspa':350,'Premium Footspa':450,
+            'Classic Lashes':500,'Natural Lashes':600,'Hybrid Lashes':700,
+            'Volume Lashes':1000,'Mega Volume':1200,'Lash Removal':100,
+            'Lash Lift':400,'Lash Tint':500,'7D Microblading':3000,
+            'Combrows':4000,'Ombre Brows':3500,'Hybrid Brows':3500,'Lip Tint':3500,
+            'Cut & Blowdry':150,'Cut, Shampoo & Blowdry':250,'Shampoo & Blowdry':200,
+            'Hair Iron & Blowdry':300,'Hair Color':500,'Hairspa':500,'Botox':1500,
+            'Keratin Straight':2000,'Brazilian Blowout':1000,'Headspa — Regular':999,
+            'Headspa — Premium':1299,'Headspa — Deluxe':1899,'Headspa — Signature':2199,
+            'Exosomes Facial':4500,'Exo-laser Facial':5000,'Derma Pen Facial':3000,
+            'Pico: Elbow or Knees':900,'Pico: Neck or Nape':1000,'Pico: Butt Area':1200,
+            'Pico: Brazilian/Inguinal':1200,'Pico: Underarm':1000,
+            'Laser: Elbow or Knees':800,'Laser: Neck or Nape':800,'Laser: Butt Area':1000,
+            'Laser: Brazilian/Inguinal':1000,'Laser: Underarm':900,
+            'HIFU: Face Neck':1500,'HIFU: Arms or Love Handle':1500,'HIFU: Lower Butt':2000,
+            'Exilis: Face & Neck':1200,'Exilis: Arms':1500,'Exilis: Thighs':1500,
+            'Exilis: Love Handle':1500,'Exilis: Tummy':1800,'Slimming Bed (30 mins)':800,
+            'Meso Lipo Face & Chin':2500,'Meso Lipo Any Part':4500,
+            'Mani & Pedicure':150,'Ingrown Removal':250,'Gel Manicure':400,
+            'Gel Pedicure':500,'Gel Polish Removal':100,'Nail Extension (Plain)':1000,
+            'Nail Extension Removal':300,'Stickers / Glitter / Rhinestones':20,
+            'Ribbon / 3D Flowers / Stones':30,'Nail Art':50,
+            'Reinforced Gel Overlay':80,'Cateye':200,
+        };
+        function lookupServicePrice(serviceName) {
+            return SERVICE_PRICES[serviceName] || 0;
+        }
+
+        // ── Reset Data Modal ─────────────────────────────────────────────────
+        function openResetModal() {
+            document.getElementById('resetModal').classList.add('show');
+        }
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.remove('show');
+        }
+        async function confirmResetData() {
+            closeResetModal();
+            try {
+                const response = await fetch(`${API_BASE}?route=admin/reset`, { method: 'POST' });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showAdminAlert('All data has been reset successfully.', 'success');
+                } else {
+                    showAdminAlert('Reset failed: ' + (result.message || 'Unknown error'), 'error');
+                }
+            } catch (err) {
+                showAdminAlert('Connection error during reset: ' + err.message, 'error');
+            }
+            refreshAllData();
+        }
+        document.addEventListener('click', function(e) {
+            if (e.target === document.getElementById('resetModal')) closeResetModal();
+        });
+
+    </script>
+</body>
+</html>

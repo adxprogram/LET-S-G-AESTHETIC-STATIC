@@ -1,0 +1,16 @@
+ideal
+
+root-folder/
+│
+├── index.html
+├── services.html
+├── gallery.html
+│
+├── css/
+│   └── styles.css
+│
+└── images/
+    ├── global/          (Logos, favicons, footer icons)
+    ├── hero/            (Large, high-quality banner images)
+    ├── services/        (Facials, massages, skincare products)
+    └── gallery/         (Before-and-afters, spa interior photos)

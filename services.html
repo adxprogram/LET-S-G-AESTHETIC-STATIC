@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service | Let's G Aesthetic and Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="script/script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="images/global/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <a href="index.html" aria-label="Go to home page">
+            <img src="images/global/lets-g-gold.png" alt="Let's G Aesthetics" decoding="async">
+            </a>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html" class="active">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <!-- <li class="nav-admin-profile"><a href="admin-login.html" class="btn-admin-portal">Staff Portal Key</a></li> -->
+            </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px;">
+
+            <button class="btn-primary header-btn" onclick="openBooking()">Book Now</button>
+        </div>
+    </header>
+
+    <section class="services-hero-header fade-in">
+
+        <!-- ADD THIS: -->
+        <div style="
+            position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+            font-family: var(--font-heading); font-size: 28vw;
+            color: rgba(212,175,55,0.025); line-height: 1;
+            pointer-events: none; user-select: none; z-index: 0;
+        ">M</div>
+
+        <div class="services-hero-header-inner">
+            <span class="services-hero-label">Select a category to view details</span>
+            <h2>The <em>Menu</em></h2>
+        </div>
+    </section>
+
+    <section class="section-dark fade-in" style="padding-top: 0;">
+        <div class="grid-3">
+            
+            <div class="card category-box" onclick="openModal('modal-facial')">
+                <span class="card-number" style="margin-bottom: 10px;">01</span>
+                <h3>Facial Treatments</h3>
+                <p>Clinical care, peels, carbon & CO2 lasers.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-wellness')">
+                <span class="card-number" style="margin-bottom: 10px;">02</span>
+                <h3>Wellness & Massage</h3>
+                <p>Traditional therapies, Hotstone, & Ventosa.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-brows')">
+                <span class="card-number" style="margin-bottom: 10px;">03</span>
+                <h3>Brows & Lashes</h3>
+                <p>Microblading, extensions, & lip tints.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-hair')">
+                <span class="card-number" style="margin-bottom: 10px;">04</span>
+                <h3>Hair & Scalp Care</h3>
+                <p>Japanese Headspa packages, color & styling.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-repair')">
+                <span class="card-number" style="margin-bottom: 10px;">05</span>
+                <h3>Skin Repair</h3>
+                <p>Exosomes, Derma Pen, & cellular renewal.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-laser')">
+                <span class="card-number" style="margin-bottom: 10px;">06</span>
+                <h3>Laser & Hair Removal</h3>
+                <p>Pico Whitening & Diode Laser sessions.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-slimming')">
+                <span class="card-number" style="margin-bottom: 10px;">07</span>
+                <h3>Slimming & Contouring</h3>
+                <p>HIFU, Exilis, Meso Lipo & Slimming Bed.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-nails')">
+                <span class="card-number" style="margin-bottom: 10px;">08</span>
+                <h3>Nail Care Services</h3>
+                <p>Gel polish, extensions, & creative nail art.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-gluta')">
+                <span class="card-number" style="margin-bottom: 10px;">09</span>
+                <h3>Gluta Drips & Vitamins</h3>
+                <p>Beauty pushes, IV drips & wellness add-ons.</p>
+            </div>
+
+            <div class="card category-box" onclick="openModal('modal-warts')">
+                <span class="card-number" style="margin-bottom: 10px;">10</span>
+                <h3>Warts & Skintag</h3>
+                <p>Cauterize and laser removal treatments.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="modal-facial" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-facial')">&times;</span>
+            <h2>Facial Treatments</h2>
+            
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Diamond Peel Facial</span><span class="modal-item-price">₱ 450</span></div><p class="modal-item-desc">A non-invasive skin treatment that uses a diamond-tipped wand to exfoliate.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Galvanic Facial</span><span class="modal-item-price">₱ 650</span></div><p class="modal-item-desc">Helps plump and smooth the skin, minimizing fine lines, wrinkles, and rough dry skin.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Hydra Facial</span><span class="modal-item-price">₱ 800</span></div><p class="modal-item-desc">Ultimate treatment to hydrate, nourish, detoxify and rejuvenate while deep cleansing.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Glowing Facial</span><span class="modal-item-price">₱ 1,000</span></div><p class="modal-item-desc">Chemical agent used to exfoliate and renew the skin on a superficial to deep level.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Carbon Laser Facial</span><span class="modal-item-price">₱ 1,000</span></div><p class="modal-item-desc">Rejuvenates damaged skin, removes top layer, leaving an amazing glow with a youthful complexion.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Acne Peel Facial</span><span class="modal-item-price">₱ 1,200</span></div><p class="modal-item-desc">Medical-grade facial with comedone extraction & Acne Treatment peel to control excessive oil.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Pico Facial Laser</span><span class="modal-item-price">₱ 1,300</span></div><p class="modal-item-desc">Utilizes laser technology to treat brown spots, sun damage & stimulates collagen/elastin.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Ageless Facial</span><span class="modal-item-price">₱ 1,500</span></div><p class="modal-item-desc">Aims to tighten skin, restore elasticity and reduce wrinkles. Powerful hydrating effect.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Exilis Facial</span><span class="modal-item-price">₱ 1,500</span></div><p class="modal-item-desc">Proven to reduce the size of fat cells and stimulate collagen production.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Contour Facial (HIFU)</span><span class="modal-item-price">₱ 1,700</span></div><p class="modal-item-desc">Non-surgical procedure using ultrasound waves to tighten and firm the skin.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">CO2 Facial Laser</span><span class="modal-item-price">₱ 2,500</span></div><p class="modal-item-desc">Minimizes the appearance of melasma, dark spots, scarring, wrinkles, and acne marks.</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Melasma Facial</span><span class="modal-item-price">₱ 3,000</span></div><p class="modal-item-desc">Using micro-needling to target uneven skintone & improve pigmentation (Melasma bright serum).</p></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-facial'); openBooking('Facial Treatments')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-wellness" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-wellness')">&times;</span>
+            <h2>Wellness Services</h2>
+            
+            <h3 class="modal-subcategory">Traditional Massages</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Back Massage</span><span class="modal-item-price">₱ 250</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Foot Massage</span><span class="modal-item-price">₱ 300</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Swedish</span><span class="modal-item-price">₱ 400</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Combi Massage</span><span class="modal-item-price">₱ 500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Bodyscrub</span><span class="modal-item-price">₱ 600</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Deep Tissue</span><span class="modal-item-price">₱ 700</span></div></div>
+
+            <h3 class="modal-subcategory">Specialty Packages</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Swedish Hotstone (1hr)</span><span class="modal-item-price">₱ 550</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Swedish Ventosa (1hr)</span><span class="modal-item-price">₱ 600</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Signature Massage (1.5hr)</span><span class="modal-item-price">₱ 600</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Deep Tissue Ventosa (1hr)</span><span class="modal-item-price">₱ 800</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Deep Tissue Hotstone (1hr)</span><span class="modal-item-price">₱ 850</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Full Body Massage w/ Hotstone (2hrs)</span><span class="modal-item-price">₱ 900</span></div></div>
+
+            <h3 class="modal-subcategory">Add-ons</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Hotstone</span><span class="modal-item-price">₱ 150</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Ear Candling</span><span class="modal-item-price">₱ 150</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Ventosa</span><span class="modal-item-price">₱ 200</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Regular Footspa</span><span class="modal-item-price">₱ 350</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Premium Footspa</span><span class="modal-item-price">₱ 450</span></div></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-wellness'); openBooking('Wellness & Massage')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-brows" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-brows')">&times;</span>
+            <h2>Brows & Lashes</h2>
+            
+            <h3 class="modal-subcategory">Eyelashes</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Classic</span><span class="modal-item-price">₱ 500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Natural</span><span class="modal-item-price">₱ 600</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Hybrid</span><span class="modal-item-price">₱ 700</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Volume</span><span class="modal-item-price">₱ 1,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Mega Volume</span><span class="modal-item-price">₱ 1,200</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Removal</span><span class="modal-item-price">₱ 100 - ₱ 300</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Lash Lift</span><span class="modal-item-price">₱ 400</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Lash Tint</span><span class="modal-item-price">₱ 500</span></div></div>
+
+            <h3 class="modal-subcategory">Microblading & Tinting</h3>
+            <p class="modal-item-desc" style="margin-bottom: 15px;">Prices show 1st Session / 2nd Session</p>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">7D Microblading</span><span class="modal-item-price" style="font-size:1rem;">₱ 3,000 / ₱ 1,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Combrows</span><span class="modal-item-price" style="font-size:1rem;">₱ 4,000 / ₱ 2,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Ombre Brows</span><span class="modal-item-price" style="font-size:1rem;">₱ 3,500 / ₱ 1,750</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Hybrid Brows</span><span class="modal-item-price" style="font-size:1rem;">₱ 3,500 / ₱ 1,750</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Lip Tint</span><span class="modal-item-price" style="font-size:1rem;">₱ 3,500 / ₱ 1,750</span></div></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-brows'); openBooking('Brows & Lashes')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-hair" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-hair')">&times;</span>
+            <h2>Hair Services</h2>
+            
+            <h3 class="modal-subcategory">Cut & Styling</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Cut & Blowdry</span><span class="modal-item-price">₱ 150</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Shampoo & Blowdry</span><span class="modal-item-price">₱ 200</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Cut, Shampoo & Blowdry</span><span class="modal-item-price">₱ 250</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Hair Iron & Blowdry</span><span class="modal-item-price">₱ 300</span></div></div>
+
+            <h3 class="modal-subcategory">Colors & Treatments</h3>
+            <p class="modal-item-desc" style="margin-bottom: 15px;">Prices start at (Depends on Hair Length)</p>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Color</span><span class="modal-item-price">₱ 500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Hairspa</span><span class="modal-item-price">₱ 500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Brazilian Blowout</span><span class="modal-item-price">₱ 1,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Botox</span><span class="modal-item-price">₱ 1,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Keratin Straight</span><span class="modal-item-price">₱ 2,000</span></div></div>
+
+            <h3 class="modal-subcategory">Japanese Headspa Packages</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Regular</span><span class="modal-item-price">₱ 999</span></div><p class="modal-item-desc">Hairspa Treatment + 30mins Back and Arms Massage</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Premium</span><span class="modal-item-price">₱ 1,299</span></div><p class="modal-item-desc">Hairspa Treatment + 1hr Body Massage with Hotstone</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Deluxe</span><span class="modal-item-price">₱ 1,899</span></div><p class="modal-item-desc">Hairspa Treatment + 1hr Body Massage + Bodyscrub or Facial</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Signature</span><span class="modal-item-price">₱ 2,199</span></div><p class="modal-item-desc">Hairspa + Footspa + 1hr Body Massage + Bodyscrub or Galvanic Facial</p></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-hair'); openBooking('Hair Services')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-repair" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-repair')">&times;</span>
+            <h2>Skin Repair</h2>
+            
+            <div class="modal-item">
+                <div class="modal-item-header">
+                    <span class="modal-item-name">Derma Pen Facial</span>
+                    <span class="modal-item-price">₱ 3,000</span>
+                </div>
+                <p class="modal-item-desc">Effective non-invasive procedure to reduce scarring, minimize large pores, correct skin pigmentation, and rejuvenate aging skin.</p>
+            </div>
+
+            <div class="modal-item">
+                <div class="modal-item-header">
+                    <span class="modal-item-name">Exosomes Facial</span>
+                    <span class="modal-item-price">₱ 4,500</span>
+                </div>
+                <p class="modal-item-desc">A potent serum applied to your skin that sends instructions to your cells to regenerate and repair themselves.</p>
+            </div>
+            
+            <div class="modal-item">
+                <div class="modal-item-header">
+                    <span class="modal-item-name">Exo-laser Facial</span>
+                    <span class="modal-item-price">₱ 5,000</span>
+                </div>
+                <p class="modal-item-desc">(For acne and athropic scars) A combination of Co2 Fractional Laser and Exosomes for cell regeneration and scar revision.</p>
+            </div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-repair'); openBooking('Skin Repair')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-laser" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-laser')">&times;</span>
+            <h2>Laser & Hair Removal</h2>
+            
+            <h3 class="modal-subcategory">Pico Whitening Laser</h3>
+            <p class="modal-item-desc" style="margin-bottom: 15px;">Prices show Per Session / Promo (5+2)</p>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Elbow or Knees</span><span class="modal-item-price" style="font-size:1rem;">₱ 900 / ₱ 4,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Neck or Nape</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,000 / ₱ 5,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Underarm</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,000 / ₱ 5,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Butt Area</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,200 / ₱ 6,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Brazilian/Inguinal</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,200 / ₱ 6,000</span></div></div>
+
+            <h3 class="modal-subcategory">Diode Laser Hair Removal</h3>
+            <p class="modal-item-desc" style="margin-bottom: 15px;">Prices show Per Session / Promo (Package varies)</p>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Face</span><span class="modal-item-price" style="font-size:1rem;">₱ 600 / ₱ 3,600 (6+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Elbow or Knees</span><span class="modal-item-price" style="font-size:1rem;">₱ 800 / ₱ 4,000 (5+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Neck or Nape</span><span class="modal-item-price" style="font-size:1rem;">₱ 800 / ₱ 4,000 (5+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Underarm</span><span class="modal-item-price" style="font-size:1rem;">₱ 800 / ₱ 4,800 (6+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Butt Area</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,000 / ₱ 5,000 (5+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Brazilian/Inguinal</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,000 / ₱ 5,000 (5+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Brazilian</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,300 / ₱ 7,800 (6+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Full Arms</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,600 / ₱ 9,600 (6+2)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Half Legs</span><span class="modal-item-price" style="font-size:1rem;">₱ 2,200 / ₱ 13,200 (6+2)</span></div></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-laser'); openBooking('Laser Treatments')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-slimming" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-slimming')">&times;</span>
+            <h2>Slimming & Contouring</h2>
+            
+            <h3 class="modal-subcategory">HIFU Ultralift</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Face Neck</span><span class="modal-item-price">₱ 1,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Arms or Love Handle</span><span class="modal-item-price">₱ 1,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Lower Butt</span><span class="modal-item-price">₱ 2,000</span></div></div>
+
+            <h3 class="modal-subcategory">Exilis Slimming Treatment</h3>
+            <p class="modal-item-desc" style="margin-bottom: 15px;">Prices show Per Session / Promo (5+1 Package)</p>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Face & Neck</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,200 / ₱ 6,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Arms</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,500 / ₱ 7,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Thighs</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,500 / ₱ 7,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Love Handle</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,500 / ₱ 7,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Tummy</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,800 / ₱ 9,000</span></div></div>
+
+            <h3 class="modal-subcategory">Meso Lipo & Slimming Bed</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Slimming Bed (30 mins)</span><span class="modal-item-price">₱ 800</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Slimming Bed (5+1 Package)</span><span class="modal-item-price">₱ 4,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Meso Lipo Face & Chin</span><span class="modal-item-price">₱ 2,500</span></div><p class="modal-item-desc">Includes FREE 30mins of Exilis</p></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Meso Lipo Any part of Body</span><span class="modal-item-price">₱ 4,500</span></div><p class="modal-item-desc">Includes FREE 40mins of Exilis</p></div>
+
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-slimming'); openBooking('Slimming & Contouring')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-nails" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-nails')">&times;</span>
+            <h2>Nail Care Services</h2>
+            
+            <h3 class="modal-subcategory">Basic Care & Gel</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Mani & Pedicure</span><span class="modal-item-price">₱ 150 / ₱ 180</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Ingrown Removal</span><span class="modal-item-price">₱ 250</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Gel Manicure</span><span class="modal-item-price">₱ 400</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Gel Pedicure</span><span class="modal-item-price">₱ 500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Gel Polish Removal</span><span class="modal-item-price">₱ 100 - ₱ 250</span></div></div>
+
+            <h3 class="modal-subcategory">Extensions</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Nail Extension (Plain)</span><span class="modal-item-price">₱ 1,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Nail Extension Removal</span><span class="modal-item-price">₱ 300 - ₱ 400</span></div></div>
+
+            <h3 class="modal-subcategory">Nail Art Add-ons</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Stickers / Powdered glitter / Small rhinestones</span><span class="modal-item-price" style="font-size:1rem;">₱ 20 /pc or nail</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Ribbon / 3D Flowers / Stones / Gems</span><span class="modal-item-price" style="font-size:1rem;">₱ 30 /pc or nail</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Nail Art</span><span class="modal-item-price" style="font-size:1rem;">₱ 50 /nail</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Reinforced Gel overlay</span><span class="modal-item-price" style="font-size:1rem;">₱ 80 /nail</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Cateye</span><span class="modal-item-price" style="font-size:1rem;">₱ 200</span></div></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-nails'); openBooking('Nail Care Services')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-gluta" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-gluta')">&times;</span>
+            <h2>Gluta Drips & Vitamins</h2>
+            
+            <h3 class="modal-subcategory">Drip Packages</h3>
+            <p class="modal-item-desc" style="margin-bottom: 15px;">Prices show Per Session / Multi-Session Package</p>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Beauty Push</span><span class="modal-item-price" style="font-size:1rem;">₱ 400 / ₱ 4,000 (10x)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Beauty Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 700 / ₱ 7,000 (10x)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Glowing Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,000 / ₱ 6,000 (6x)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Anti-Acne Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,200</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Gorgeous Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,200 / ₱ 7,200 (6x)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Fertility Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Ultimate Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 1,700 / ₱ 10,200 (6x)</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">G's Slimming Drip</span><span class="modal-item-price" style="font-size:1rem;">₱ 2,500</span></div></div>
+
+            <h3 class="modal-subcategory">Vitamin Add-ons</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Vitamin C / Vit B Complex / Placenta</span><span class="modal-item-price" style="font-size:1rem;">₱ 300</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Stemcell / Lcarnitine</span><span class="modal-item-price" style="font-size:1rem;">₱ 400</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Collagen</span><span class="modal-item-price" style="font-size:1rem;">₱ 500</span></div></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-gluta'); openBooking('Gluta Drips & Vitamins')">Book Now</button>
+        </div>
+    </div>
+
+    <div id="modal-warts" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-warts')">&times;</span>
+            <h2>Warts, Millia & Skintag Removal</h2>
+            
+            <h3 class="modal-subcategory">Cauterize Method</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Face and Neck</span><span class="modal-item-price">₱ 1,500</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Any Part of Body</span><span class="modal-item-price">₱ 1,500</span></div></div>
+
+            <h3 class="modal-subcategory">Laser Method</h3>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Any Part of Body</span><span class="modal-item-price">₱ 2,000</span></div></div>
+            <div class="modal-item"><div class="modal-item-header"><span class="modal-item-name">Face and Neck</span><span class="modal-item-price">₱ 3,000</span></div></div>
+            
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeModal('modal-warts'); openBooking('Warts & Skintag')">Book Now</button>
+        </div>
+    </div>
+
+<footer>
+    <div class="footer-grid">
+        
+        <div class="footer-col">
+            <div class="footer-logo-container" style="margin-bottom: 1rem;">
+                <img src="images/global/lets-g-footer-variant.png" alt="Let's G" decoding="async" style="max-width: 150px;">
+            </div>
+            <p>Aesthetic & Wellness Services.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="#faq" style="color: var(--brand-gold); font-weight: 600;">FAQ ↑</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Visit Us</h4>
+            <ul>
+                <li>G. Lazaro Road, Cor Isabelo Fernando, Valenzuela, 1443</li>
+                <li><a href="tel:+639541768840">(+63) 954 176 8840</a></li>
+                <li><a href="mailto:letsgreservation@gmail.com">letsgreservation@gmail.com</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+                <a href="https://www.facebook.com/LetsGAesthetic" target="_blank" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 28 28" width="32" height="32">
+                    <defs>
+                        <linearGradient id="gold-grad-fb" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#AA771C" />
+                        <stop offset="30%" stop-color="#D4AF37" />
+                        <stop offset="50%" stop-color="#F3E5AB" />
+                        <stop offset="70%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#8A5A19" />
+                        </linearGradient>
+                    </defs>
+                    <path fill="url(#gold-grad-fb)" d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
+                    </svg>
+                </a>
+
+                <a href="https://www.instagram.com/letsgaesthetic/?hl=en" target="_blank" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                    <defs>
+                        <linearGradient id="gold-grad-ig" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#AA771C" />
+                        <stop offset="30%" stop-color="#D4AF37" />
+                        <stop offset="50%" stop-color="#F3E5AB" />
+                        <stop offset="70%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#8A5A19" />
+                        </linearGradient>
+                    </defs>
+                    <path fill="url(#gold-grad-ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.822a1.44 1.44 0 11-2.881 0 1.44 1.44 0 012.88 0z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; 2026 Let's G Aesthetic and Wellness Services. All rights reserved.
+    </div>
+</footer>
+</body>
+</html>

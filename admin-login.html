@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login | Let's G Aesthetic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="icon" type="image/x-icon" href="images/global/favicon.ico">
+</head>
+<body style="background-color: var(--bg-main);">
+
+    <div class="admin-login-wrapper">
+        <div class="login-container">
+            <div class="login-logo"><img src="images/global/lets-g-gold.png" alt="Let's G Aesthetics" decoding="async"></div>
+            <div class="login-subtitle">Secure Workplace Portal</div>
+
+            <!-- No action/method so it never does a native submit -->
+            <form id="admin-login-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="username">Staff ID / Username</label>
+                    <input type="text" id="username" placeholder="Enter your credentials" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="button" id="login-btn" class="btn-login">Access Dashboard</button>
+                <div class="error-message" id="error-msg" style="display:none;">Incorrect credentials. Please try again.</div>
+                
+                <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                    <a href="index.html" style="font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s;" onmouseover="this.style.color='var(--brand-gold)'" onmouseout="this.style.color='var(--text-muted)'">
+                        ← Back to Main Site
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('login-btn').addEventListener('click', async function () {
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const errorMsg      = document.getElementById('error-msg');
+            const submitBtn     = document.getElementById('login-btn');
+
+            if (!usernameInput || !passwordInput) {
+                errorMsg.innerText = 'Please enter your username and password.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+            submitBtn.innerText  = 'Verifying...';
+            submitBtn.disabled   = true;
+
+            try {
+                const response = await fetch('/database/api.php?route=admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usernameInput, password: passwordInput })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.status === 'success') {
+                    submitBtn.innerText = 'Access Granted ✓';
+                    submitBtn.style.backgroundColor = '#10b981';
+                    submitBtn.style.color = '#ffffff';
+                    sessionStorage.setItem('lg_admin_verified', '1');
+                    setTimeout(() => { window.location.href = 'admin.html'; }, 500);
+                } else {
+                    errorMsg.innerText = result.message || 'Invalid username or password.';
+                    errorMsg.style.display = 'block';
+                    submitBtn.innerText = 'Access Dashboard';
+                    submitBtn.disabled  = false;
+                }
+            } catch (err) {
+                errorMsg.innerText = 'Could not reach server: ' + err.message;
+                errorMsg.style.display = 'block';
+                submitBtn.innerText = 'Access Dashboard';
+                submitBtn.disabled  = false;
+            }
+        });
+
+        // Also allow pressing Enter in either field
+        document.getElementById('username').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('login-btn').click();
+        });
+        document.getElementById('password').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('login-btn').click();
+        });
+    </script>
+
+</body>
+</html>
