@@ -590,7 +590,7 @@
     <div class="contact-cta-band fade-in">
         <div class="cta-band-left">
             <h3>Skip the Wait — <em>Book Online</em></h3>
-            <p>Reserve your slot directly and get a confirmed appointment ID instantly.</p>
+            <p>Send a booking request online and we’ll contact you to confirm your appointment.</p>
         </div>
         <div class="cta-band-right">
             <button class="btn-primary" onclick="openBooking()" style="white-space:nowrap;">Book Your Session</button>
@@ -647,35 +647,62 @@
     </footer>
 
     <script>
-        const form = document.getElementById('contactForm');
-        const submitButton = form.querySelector('.cf-submit');
-        const originalButtonContent = submitButton.innerHTML;
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contactForm');
+            if (!contactForm) return;
 
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            submitButton.textContent = 'Sending...';
-            submitButton.disabled = true;
+            const submitBtn = contactForm.querySelector('.cf-submit');
+            const originalContent = submitBtn.innerHTML;
 
-            try {
-                const response = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    body: new FormData(form)
-                });
-                const result = await response.json();
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
 
-                if (!response.ok || !result.success) {
-                    throw new Error(result.message || 'Something went wrong. Please try again.');
+                submitBtn.textContent = 'Sending...';
+                submitBtn.disabled = true;
+
+                const formData = new FormData(contactForm);
+                const payload = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    console.log('Web3Forms response:', result);
+
+                    if (response.ok && result.success) {
+                        contactForm.reset();
+                        contactForm.style.display = 'none';
+                        const successBox = document.getElementById('cf-success');
+                        if (successBox) successBox.style.display = 'block';
+                    } else {
+                        const message = result.message || 'Unable to submit the form.';
+                        if (window.showToast) {
+                            window.showToast(message, 'error');
+                        } else {
+                            alert(message);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Web3Forms Error:', err);
+                    const networkMsg = 'Network error. Please check your internet connection.';
+                    if (window.showToast) {
+                        window.showToast(networkMsg, 'error');
+                    } else {
+                        alert(networkMsg);
+                    }
+                } finally {
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.disabled = false;
                 }
-
-                form.reset();
-                form.style.display = 'none';
-                document.getElementById('cf-success').style.display = 'block';
-            } catch (error) {
-                alert(error.message || 'Unable to send your message. Please try again.');
-            } finally {
-                submitButton.innerHTML = originalButtonContent;
-                submitButton.disabled = false;
-            }
+            });
         });
     </script>
 </body>

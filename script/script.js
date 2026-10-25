@@ -2088,33 +2088,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('#addl-services-list input[type="checkbox"]:checked').forEach(cb => addonsList.push(cb.value));
 
                 const payload = {
+                    access_key: '86e630dc-487c-4601-ab8a-eca9bedb8e9f',
+                    from_name: "Let's G Aesthetics Booking Page",
+                    subject: 'New booking request',
                     name:     document.getElementById('b-name').value,
                     phone:    (document.getElementById('b-phone-prefix')?.value || '+63') + document.getElementById('b-phone').value,
                     category: document.getElementById('b-category-native').value,
                     service:  document.getElementById('b-service-native').value,
                     date:     document.getElementById('b-date-native').value,
                     notes:    document.getElementById('b-notes').value,
-                    addons:   addonsList
+                    addons:   addonsList.join(', ') || 'None'
                 };
 
                 try {
-                    const response = await fetch('/database/api.php?route=book', {
+                    const response = await fetch('https://api.web3forms.com/submit', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
                         body: JSON.stringify(payload)
                     });
                     const result = await response.json();
-                    if (response.ok && result.status === 'success') {
-                        document.getElementById('bookingFormPop').reset();
+                    console.log('Web3Forms booking response:', result);
+                    if (response.ok && result.success) {
+                        this.reset();
                         document.getElementById('b-service-info').classList.remove('visible');
                         closeModal('modal-booking');
-                        showBookingReceipt(result, payload);
+                        showToast('Booking request sent. The clinic will contact you to confirm your appointment.', 'success', 6000);
                     } else {
-                        throw new Error(result.message || 'Failed to book appointment');
+                        throw new Error(result.message || 'Unable to send your booking request.');
                     }
                 } catch (error) {
-                    console.error('Error:', error);
-                    showToast('Error connecting to server. Please try again or contact support.', 'error');
+                    console.error('Booking request error:', error);
+                    showToast(error.message || 'Unable to send your booking request. Please try again.', 'error');
                 } finally {
                     submitBtn.innerText = "Confirm Booking";
                     submitBtn.disabled  = false;
