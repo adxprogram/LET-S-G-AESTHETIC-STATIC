@@ -2166,29 +2166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 5. CONTACT FORM SUBMISSION ---
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name    = contactForm.querySelector('input[type="text"]').value;
-            const email   = contactForm.querySelector('input[type="email"]').value;
-            const message = contactForm.querySelector('textarea').value;
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            submitBtn.innerText = "Sending...";
-            fetch('/database/api.php?route=contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, message })
-            })
-            .then(r => r.json())
-            .then(data => { showToast(data.message, data.status === 'success' ? 'success' : 'error'); if (data.status === 'success') contactForm.reset(); })
-            .catch(() => showToast('Server error. Please try again or contact support.', 'error'))
-            .finally(() => submitBtn.innerText = "Send Message");
-        });
-    }
-
-    // --- 6. SANCTUARY CLUB SUBMISSION ---
+    // --- 5. SANCTUARY CLUB SUBMISSION ---
     const clubForm = document.getElementById('clubForm');
     if (clubForm) {
         clubForm.addEventListener('submit', function(event) {
