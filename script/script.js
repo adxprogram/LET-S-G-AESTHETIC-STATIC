@@ -2091,10 +2091,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const selectedAddons = document.querySelectorAll(
                     '#addon-checkbox-list input[type="checkbox"]:checked, #addl-services-list input[type="checkbox"]:checked'
                 );
-                const totalPrice = Array.from(selectedAddons).reduce(
-                    (total, checkbox) => total + (parseInt(checkbox.dataset.price, 10) || 0),
-                    ADDITIONAL_PRICE_MAP[selectedService] || 0
-                );
+                const priceLines = [];
+                const mainServicePrice = ADDITIONAL_PRICE_MAP[selectedService] || 0;
+                let totalPrice = mainServicePrice;
+                if (mainServicePrice > 0) {
+                    priceLines.push(`${selectedService}\n₱${mainServicePrice.toLocaleString('en-PH')}`);
+                }
+                selectedAddons.forEach(checkbox => {
+                    const price = parseInt(checkbox.dataset.price, 10) || 0;
+                    totalPrice += price;
+                    priceLines.push(`${checkbox.value}\n₱${price.toLocaleString('en-PH')}`);
+                });
+                priceLines.push(`Estimated Total\n₱${totalPrice.toLocaleString('en-PH')}`);
 
                 const payload = {
                     access_key: '86e630dc-487c-4601-ab8a-eca9bedb8e9f',
@@ -2107,7 +2115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     date:     document.getElementById('b-date-native').value,
                     notes:    document.getElementById('b-notes').value,
                     addons:   addonsList.join(', ') || 'None',
-                    total_price: '₱' + totalPrice.toLocaleString('en-PH')
+                    price_breakdown: priceLines.join('\n\n')
                 };
 
                 try {
