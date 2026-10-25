@@ -42,11 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyGoogleProfileToBooking() {
         const fullName = document.getElementById('fullName');
+        const bookingEmail = document.getElementById('b-email');
         const googleEmail = document.getElementById('googleEmail');
         const googleName = document.getElementById('googleName');
-        if (fullName) fullName.value = googleProfile?.name || '';
-        if (googleEmail) googleEmail.value = googleProfile?.email || '';
-        if (googleName) googleName.value = googleProfile?.name || '';
+        if (googleProfile) {
+            if (fullName) fullName.value = googleProfile.name;
+            if (bookingEmail) bookingEmail.value = googleProfile.email;
+            if (googleEmail) googleEmail.value = googleProfile.email;
+            if (googleName) googleName.value = googleProfile.name;
+        } else {
+            if (googleEmail) googleEmail.value = '';
+            if (googleName) googleName.value = '';
+        }
     }
 
     function renderNavUserArea() {
@@ -586,6 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gap: 24px;
                 align-items: start;
             }
+            .bk-layout.booking-complete { grid-template-columns: 1fr; }
             .bk-form-col { min-width: 0; }
             .bk-total-col {
                 position: sticky;
@@ -648,6 +656,163 @@ document.addEventListener('DOMContentLoaded', () => {
                 font-size: 0.78rem;
                 color: #52525b;
                 line-height: 1.6;
+            }
+            .booking-confirmation-note {
+                padding: 14px;
+                border-left: 2px solid var(--brand-gold, #D4AF37);
+                background: rgba(212, 175, 55, 0.05);
+                color: #d4d4d8;
+                font-size: 0.8rem;
+                line-height: 1.6;
+            }
+            .booking-confirmation-note strong { color: var(--brand-gold, #D4AF37); }
+            .booking-receipt {
+                padding: 28px;
+                border: 1px solid rgba(212, 175, 55, 0.5);
+                border-top: 3px solid var(--brand-gold, #D4AF37);
+                background: #0c0c0c;
+                color: #f4f4f5;
+            }
+            #modal-booking .modal-content.booking-receipt-open #bookingModalTitle,
+            #modal-booking .modal-content.booking-receipt-open #bookingModalSubtitle { display: none; }
+            .booking-receipt-header {
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                padding-bottom: 18px;
+                margin-bottom: 18px;
+                border-bottom: 1px solid #393326;
+            }
+            .booking-receipt-logo { width: 78px; height: auto; object-fit: contain; }
+            .booking-receipt-brand { color: var(--brand-gold, #D4AF37); font: 600 1.25rem 'Playfair Display', serif; }
+            .booking-receipt-address { color: #a1a1aa; font-size: 0.76rem; }
+            .booking-receipt-title { margin-bottom: 4px; color: var(--brand-gold, #D4AF37); font: 600 1.65rem 'Playfair Display', serif; }
+            .booking-receipt-subtitle { margin-bottom: 20px; color: #a1a1aa; font-size: 0.82rem; }
+            .booking-receipt-details { display: grid; gap: 13px; }
+            .booking-receipt-row {
+                display: flex;
+                justify-content: space-between;
+                gap: 16px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #242424;
+            }
+            .booking-receipt-row span { color: #a1a1aa; font-size: 0.78rem; }
+            .booking-receipt-row strong { color: #f4f4f5; text-align: right; font-size: 0.84rem; overflow-wrap: anywhere; }
+            .booking-receipt-total {
+                display: flex;
+                justify-content: space-between;
+                gap: 16px;
+                margin-top: 18px;
+                padding: 15px 0;
+                border-top: 1px solid var(--brand-gold, #D4AF37);
+                color: var(--brand-gold, #D4AF37);
+                font-weight: 700;
+            }
+            .booking-receipt-status {
+                margin-top: 10px;
+                padding: 12px;
+                border: 1px solid rgba(212, 175, 55, 0.35);
+                color: #f2e8c8;
+                font-size: 0.8rem;
+            }
+            .booking-receipt-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+            .booking-receipt-actions button { flex: 1; min-width: 170px; }
+            .booking-receipt-done {
+                padding: 14px 24px;
+                border: 1px solid var(--brand-gold, #D4AF37);
+                background: transparent;
+                color: var(--brand-gold, #D4AF37);
+                font: 700 0.8rem var(--font-body, sans-serif);
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+            .booking-receipt-done:hover { background: var(--brand-gold, #D4AF37); color: #000; }
+            @media print {
+                html,
+                body.print-booking-receipt {
+                    width: 100% !important;
+                    height: auto !important;
+                    min-height: 0 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    overflow: visible !important;
+                    background: #fff !important;
+                }
+                body.print-booking-receipt > * { display: none !important; }
+                body.print-booking-receipt #modal-booking {
+                    position: static !important;
+                    display: block !important;
+                    width: auto !important;
+                    height: auto !important;
+                    min-height: 0 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    overflow: visible !important;
+                    background: transparent !important;
+                    opacity: 1 !important;
+                    backdrop-filter: none !important;
+                    break-inside: avoid !important;
+                }
+                body.print-booking-receipt #modal-booking .modal-content {
+                    position: static !important;
+                    width: auto !important;
+                    max-width: none !important;
+                    max-height: none !important;
+                    min-height: 0 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    overflow: visible !important;
+                    border: 0 !important;
+                    background: transparent !important;
+                    box-shadow: none !important;
+                    transform: none !important;
+                }
+                body.print-booking-receipt #modal-booking .modal-content > :not(.bk-layout) {
+                    display: none !important;
+                }
+                body.print-booking-receipt #modal-booking .bk-layout {
+                    display: block !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                body.print-booking-receipt #modal-booking .bk-layout > :not(.bk-form-col) {
+                    display: none !important;
+                }
+                body.print-booking-receipt #modal-booking .bk-form-col {
+                    display: block !important;
+                    width: 100% !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                body.print-booking-receipt #bookingFormPop { display: none !important; }
+                body.print-booking-receipt #bookingConfirmation {
+                    display: block !important;
+                    width: 100% !important;
+                    max-width: 720px !important;
+                    margin: 0 auto !important;
+                    padding: 24px !important;
+                    border: 1px solid #b08d26 !important;
+                    background: #fff !important;
+                    color: #161616 !important;
+                    break-inside: avoid !important;
+                    print-color-adjust: exact;
+                    -webkit-print-color-adjust: exact;
+                }
+                body.print-booking-receipt #bookingConfirmation * { color: #161616 !important; }
+                body.print-booking-receipt #bookingConfirmation .booking-receipt-brand,
+                body.print-booking-receipt #bookingConfirmation .booking-receipt-title,
+                body.print-booking-receipt #bookingConfirmation .booking-receipt-total strong {
+                    color: #8a6b12 !important;
+                }
+                body.print-booking-receipt #bookingConfirmation .booking-receipt-address,
+                body.print-booking-receipt #bookingConfirmation .booking-receipt-subtitle,
+                body.print-booking-receipt #bookingConfirmation .booking-receipt-row span {
+                    color: #555 !important;
+                }
+                body.print-booking-receipt .close-btn,
+                body.print-booking-receipt .booking-receipt-actions { display: none !important; }
+                @page { size: auto; margin: 12mm; }
             }
 
             /* ---- Custom dropdown wrapper ---- */
@@ -969,6 +1134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             #bookingFormPop .form-group { margin-bottom: 16px; }
             #bookingFormPop input[type="text"],
+            #bookingFormPop input[type="email"],
             #bookingFormPop input[type="tel"],
             #bookingFormPop textarea {
                 width: 100%;
@@ -2005,6 +2171,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function resetBookingReceipt() {
+        const form = document.getElementById('bookingFormPop');
+        const confirmation = document.getElementById('bookingConfirmation');
+        if (!form || !confirmation || confirmation.hidden) return;
+
+        form.reset();
+        form.hidden = false;
+        confirmation.hidden = true;
+        document.querySelector('#modal-booking .modal-content').classList.remove('booking-receipt-open');
+        document.getElementById('bookingModalTitle').textContent = 'Book Your Session';
+        document.querySelector('#modal-booking .bk-layout').classList.remove('booking-complete');
+        document.querySelector('#modal-booking .bk-total-col').hidden = false;
+
+        const categoryTrigger = document.querySelector('#cat-wrapper .lg-select-trigger');
+        if (categoryTrigger) {
+            categoryTrigger.innerHTML = `<span>Select a Service Category...</span>${chevronSVG()}`;
+            categoryTrigger.classList.add('placeholder');
+            categoryTrigger.classList.remove('open');
+        }
+        const serviceTrigger = document.querySelector('#svc-wrapper .lg-select-trigger');
+        if (serviceTrigger) {
+            serviceTrigger.innerHTML = `<span>— Select a category first —</span>${chevronSVG()}`;
+            serviceTrigger.classList.add('placeholder', 'disabled');
+            serviceTrigger.classList.remove('open');
+        }
+        const additionalCategoryTrigger = document.querySelector('#addl-cat-wrapper .lg-select-trigger');
+        if (additionalCategoryTrigger) {
+            additionalCategoryTrigger.innerHTML = `<span>Pick a category...</span>${chevronSVG()}`;
+            additionalCategoryTrigger.classList.add('placeholder');
+            additionalCategoryTrigger.classList.remove('open');
+        }
+
+        document.getElementById('b-category-native').innerHTML = '';
+        document.getElementById('b-service-native').innerHTML = '';
+        document.getElementById('b-addl-category-native').innerHTML = '';
+        document.querySelector('#svc-wrapper .lg-select-panel').innerHTML = '';
+        document.querySelector('#addl-cat-wrapper .lg-select-panel').innerHTML = '';
+        document.getElementById('addon-section').style.display = 'none';
+        document.getElementById('addl-ask-section').style.display = 'none';
+        document.getElementById('addl-picker-section').style.display = 'none';
+        document.getElementById('addl-services-list').innerHTML = '';
+        document.getElementById('addl-search').value = '';
+        document.querySelectorAll('.addl-yn-btn').forEach(button => button.classList.remove('active'));
+        document.getElementById('b-service-info').classList.remove('visible');
+        document.getElementById('dt-wrapper')._resetCalendar?.();
+        document.getElementById('b-phone-prefix').value = '+63';
+        document.getElementById('bookingModalSubtitle').textContent =
+            "Experience ultimate relaxation at Let's G";
+        updateTotalPanel('');
+        applyGoogleProfileToBooking();
+    }
+
     // ============================================================
     // OPEN BOOKING
     // ============================================================
@@ -2022,8 +2240,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div id="modal-booking" class="modal">
                 <div class="modal-content">
                     <span class="close-btn" onclick="closeModal('modal-booking')">&times;</span>
-                    <h2 style="margin-bottom:5px;">Book Your Session</h2>
-                    <p style="color:var(--text-muted);margin-bottom:24px;">Experience ultimate relaxation at Let's G</p>
+                    <h2 id="bookingModalTitle" style="margin-bottom:5px;">Book Your Session</h2>
+                    <p id="bookingModalSubtitle" style="color:var(--text-muted);margin-bottom:24px;">Experience ultimate relaxation at Let's G</p>
 
                     <div class="bk-layout">
 
@@ -2039,6 +2257,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 <div class="form-group">
                                     <input type="text" id="fullName" required placeholder="Full Name (e.g., Juan Dela Cruz)">
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="b-email" placeholder="Email Address (Optional)">
                                 </div>
                                 <div class="form-group">
                                     <div class="phone-input-wrap">
@@ -2145,6 +2366,34 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 <button type="submit" id="b-submitBtn" class="btn-primary" style="width:100%;">Confirm Booking</button>
                             </form>
+                            <section id="bookingConfirmation" class="booking-receipt" aria-live="polite" hidden>
+                                <div class="booking-receipt-header">
+                                    <img class="booking-receipt-logo" src="images/global/lets-g-gold.png" alt="Let's G Aesthetics">
+                                    <div>
+                                        <div class="booking-receipt-brand">Let's G Aesthetics &amp; Wellness</div>
+                                        <div class="booking-receipt-address">G. Lazaro Rd, Valenzuela City</div>
+                                    </div>
+                                </div>
+                                <h3 class="booking-receipt-title">Booking Summary &amp; Receipt</h3>
+                                <p class="booking-receipt-subtitle">Please keep this request reference for your records.</p>
+                                <div class="booking-receipt-details">
+                                    <div class="booking-receipt-row"><span>Booking Reference</span><strong id="confirmationReference"></strong></div>
+                                    <div class="booking-receipt-row"><span>Client Name</span><strong id="confirmationName"></strong></div>
+                                    <div class="booking-receipt-row"><span>Phone Number</span><strong id="confirmationPhone"></strong></div>
+                                    <div class="booking-receipt-row"><span>Service Category</span><strong id="confirmationCategory"></strong></div>
+                                    <div class="booking-receipt-row"><span>Selected Service</span><strong id="confirmationService"></strong></div>
+                                    <div class="booking-receipt-row"><span>Scheduled Date &amp; Time</span><strong id="confirmationDate"></strong></div>
+                                </div>
+                                <div class="booking-receipt-total"><span>Estimated Total Amount</span><strong id="confirmationTotal"></strong></div>
+                                <div class="booking-receipt-status"><strong>Appointment Status:</strong> Pending clinic confirmation</div>
+                                <div class="booking-confirmation-note">
+                                    Your requested time is not confirmed until the clinic contacts you to verify availability.
+                                </div>
+                                <div class="booking-receipt-actions">
+                                    <button type="button" id="printBookingReceipt" class="btn-primary">Download / Print Receipt</button>
+                                    <button type="button" id="doneBookingReceipt" class="booking-receipt-done">Done / Close</button>
+                                </div>
+                            </section>
                         </div>
 
                         <!-- RIGHT: total panel -->
@@ -2277,9 +2526,17 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('bookingFormPop').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 if (_bookingIsSubmitting) return;
-                _bookingIsSubmitting = true;
 
                 const submitBtn = document.getElementById('b-submitBtn');
+                const customerName = document.getElementById('fullName').value.trim();
+                const customerPhone = (document.getElementById('b-phone-prefix').value || '+63') +
+                    document.getElementById('b-phone').value.trim();
+                if (!customerName || !document.getElementById('b-phone').value.trim()) {
+                    showToast('Please enter your name and phone number.', 'error');
+                    return;
+                }
+
+                _bookingIsSubmitting = true;
                 submitBtn.innerText = "Processing...";
                 submitBtn.disabled  = true;
 
@@ -2318,15 +2575,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 priceLines.push(`Estimated Total\n₱${totalPrice.toLocaleString('en-PH')}`);
 
+                const requestReference = `LG-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 6).toUpperCase().padEnd(4, '0')}`;
+                const requestedDate = document.getElementById('b-date-native').value;
+                const parsedDate = new Date(requestedDate);
+                const displayDate = Number.isNaN(parsedDate.getTime())
+                    ? requestedDate
+                    : parsedDate.toLocaleString('en-PH', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit'
+                    });
+                const bookingForm = this;
                 const payload = {
                     access_key: '86e630dc-487c-4601-ab8a-eca9bedb8e9f',
                     from_name: "Let's G Aesthetics Booking Page",
                     subject: 'New booking request',
-                    name:     document.getElementById('fullName').value,
-                    phone:    (document.getElementById('b-phone-prefix')?.value || '+63') + document.getElementById('b-phone').value,
+                    request_reference: requestReference,
+                    booking_status: 'Pending staff confirmation',
+                    name:     customerName,
+                    email:    document.getElementById('b-email').value.trim(),
+                    phone:    customerPhone,
                     category: document.getElementById('b-category-native').value,
                     service:  selectedService,
-                    date:     document.getElementById('b-date-native').value,
+                    date:     requestedDate,
                     notes:    document.getElementById('b-notes').value,
                     addons:   addonsList.join(', ') || 'None',
                     'Google Account Email': document.getElementById('googleEmail').value,
@@ -2346,10 +2619,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const result = await response.json();
                     console.log('Web3Forms booking response:', result);
                     if (response.ok && result.success) {
-                        this.reset();
+                        document.getElementById('bookingModalTitle').textContent = 'Booking Summary & Receipt';
+                        document.getElementById('confirmationReference').textContent = requestReference;
+                        document.getElementById('confirmationName').textContent = customerName;
+                        document.getElementById('confirmationPhone').textContent = customerPhone;
+                        document.getElementById('confirmationCategory').textContent =
+                            document.getElementById('b-category-native').value;
+                        document.getElementById('confirmationService').textContent =
+                            [selectedService, ...addonsList].join(', ');
+                        document.getElementById('confirmationDate').textContent = displayDate;
+                        document.getElementById('confirmationTotal').textContent =
+                            '₱' + totalPrice.toLocaleString('en-PH');
+                        bookingForm.hidden = true;
+                        document.getElementById('bookingConfirmation').hidden = false;
+                        document.querySelector('#modal-booking .modal-content').classList.add('booking-receipt-open');
                         document.getElementById('b-service-info').classList.remove('visible');
-                        closeModal('modal-booking');
-                        showToast('Booking request sent. The clinic will contact you to confirm your appointment.', 'success', 6000);
+                        document.querySelector('#modal-booking .bk-layout').classList.add('booking-complete');
+                        document.querySelector('#modal-booking .bk-total-col').hidden = true;
+                        showToast('Request received. The clinic will contact you to confirm availability.', 'success', 6000);
                     } else {
                         throw new Error(result.message || 'Unable to send your booking request.');
                     }
@@ -2361,6 +2648,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.disabled  = false;
                     _bookingIsSubmitting = false;
                 }
+            });
+
+            document.getElementById('printBookingReceipt').addEventListener('click', () => {
+                document.body.classList.add('print-booking-receipt');
+                window.addEventListener('afterprint', () => {
+                    document.body.classList.remove('print-booking-receipt');
+                }, { once: true });
+                try {
+                    window.print();
+                } catch (error) {
+                    document.body.classList.remove('print-booking-receipt');
+                    console.error('Could not open the receipt print dialog:', error);
+                    showToast('Unable to open printing. Please try your browser print command.', 'error');
+                }
+            });
+            document.getElementById('doneBookingReceipt').addEventListener('click', () => {
+                resetBookingReceipt();
+                closeModal('modal-booking');
             });
 
         } // end if (!bookingModal)
@@ -2401,6 +2706,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.closeModal = function(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
+            if (modalId === 'modal-booking') resetBookingReceipt();
             modal.classList.remove('show');
             const authModal = document.getElementById('authModal');
             document.body.style.overflow = authModal?.classList.contains('show') ? 'hidden' : '';
@@ -2408,6 +2714,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     window.addEventListener('click', function(event) {
         if (event.target.classList.contains('modal')) {
+            if (event.target.id === 'modal-booking') resetBookingReceipt();
             event.target.classList.remove('show');
             const authModal = document.getElementById('authModal');
             document.body.style.overflow = authModal?.classList.contains('show') ? 'hidden' : '';
